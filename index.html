@@ -1764,6 +1764,7 @@
         }).then(r => r.json()).then(res => {
           if (res.success) {
             state.currentExamRound = res.round;
+            console.log("초고속 단일 행 동기화 완료 (회차: " + res.round + ")");
           }
         }).catch(err => {
           console.warn("Background sheet sync failed:", err);
@@ -1928,7 +1929,7 @@
 
     async function fetchAndRenderPortfolio(pin) {
       const feedbackEl = document.getElementById('portfolioAiFeedback');
-      feedbackEl.textContent = "구글 시트 데이터베이스에서 누적 응시 기록을 불러와 분석 중입니다...";
+      feedbackEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2 text-blue-600"></i>구글 시트 압축 데이터베이스에서 누적 응시 기록을 초고속 조회 중입니다...';
 
       let portfolioData = null;
 
@@ -1946,20 +1947,32 @@
         console.warn("Portfolio fetch fallback:", err);
       }
 
+      // 구글 시트 연결 전이거나 첫 응시인 경우 현재 세션 데이터 기반으로 즉시 시각화 생성
       if (!portfolioData || !portfolioData.success || !portfolioData.rounds || portfolioData.rounds.length === 0) {
         const currScore = state.scoreData ? state.scoreData.totalScore : 84;
+        
+        // 현재 세션의 풀이 기록을 소단원별 통계로 변환
+        const localStats = {};
+        if (state.scoreData && state.scoreData.itemLogs) {
+          state.scoreData.itemLogs.forEach(item => {
+            const key = item.subTopic || item.unit;
+            if (!localStats[key]) localStats[key] = { total: 0, correct: 0 };
+            localStats[key].total += 1;
+            if (item.isCorrect) localStats[key].correct += 1;
+          });
+        }
+
         portfolioData = {
           rounds: [
-            { round: 1, totalScore: Math.max(52, currScore - 16) },
-            { round: 2, totalScore: currScore }
+            { round: 1, totalScore: currScore, date: new Date().toLocaleDateString('ko-KR') }
           ],
-          topicStats: {
-            "삼각비의 뜻": { total: 3, correct: 3 },
-            "특수각의 삼각비": { total: 3, correct: 3 },
+          topicStats: Object.keys(localStats).length > 0 ? localStats : {
+            "삼각비의 뜻": { total: 4, correct: 4 },
+            "특수각의 삼각비": { total: 4, correct: 3 },
             "삼각비의 활용": { total: 6, correct: 4 },
-            "원의 중심과 현": { total: 2, correct: 2 },
-            "원주각의 성질": { total: 6, correct: 5 },
-            "접현각과 접선": { total: 5, correct: 3 }
+            "원의 중심과 현": { total: 3, correct: 3 },
+            "원주각과 중심각": { total: 5, correct: 4 },
+            "원의 접선과 반지름": { total: 3, correct: 2 }
           }
         };
       }
@@ -1969,6 +1982,7 @@
     }
 
     function renderPortfolioCharts(data) {
+      // 1. 회차별 득점 추이 라인 차트
       const ctxLine = document.getElementById('chartScoreRounds').getContext('2d');
       if (roundsChartInstance) roundsChartInstance.destroy();
 
@@ -1986,8 +2000,9 @@
             backgroundColor: 'rgba(37, 99, 235, 0.08)',
             borderWidth: 3,
             fill: true,
-            tension: 0.35,
-            pointRadius: 5,
+            tension: 0.3,
+            pointRadius: 6,
+            pointHoverRadius: 8,
             pointBackgroundColor: '#2563eb'
           }]
         },
@@ -2000,47 +2015,64 @@
         }
       });
 
+      // 2. 5대 핵심 기하 영역별 실제 정답률 동적 집계 (레이더 차트)
+      const domainCategories = {
+        "삼각비 기초/특수각": ["삼각비의 뜻", "특수각의 삼각비", "특수각의 응용", "단위사분원과 삼각비", "직각이등변삼각형"],
+        "삼각비 활용(넓이/높이)": ["삼각비의 활용 (넓이)", "일반 삼각형의 변의 길이", "삼각비의 활용 (높이 측정)", "직각삼각형 속 수선", "평행사변형의 넓이", "마름모의 넓이와 삼각비", "직선의 기울기와 삼각비", "비특수각 수선 보조선 분할 (보조선 킬러)", "직사각형 접기와 삼각비 연립 (최고난도)", "각의 이등분선과 삼각비 넓이 융합 (최고난도)", "정삼각형 내부 한 점 회전 보조선 (극심화 킬러)"],
+        "원의 중심과 현": ["원의 중심과 현", "현의 길이와 중심까지의 거리", "현의 연장선과 지름 수선 보조선 (보조선 킬러)"],
+        "원주각과 내접도형": ["원주각과 중심각", "지름에 대한 원주각", "호의 길이와 원주각", "동일 호의 원주각", "원주각의 크기와 호의 비례", "원의 성질", "원의 내접사각형", "내접사각형과 대각의 합", "직각삼각형의 외접원", "원주각의 합과 호", "지름 보조선과 삼각비 (보조선 킬러)"],
+        "원의 접선과 접현각": ["원의 접선과 반지름", "원의 접선의 성질", "원의 외접사각형", "원의 중심과 접선", "접선과 삼각형의 둘레", "접현각과 할선의 닯음 연쇄 (최고난도)", "두 원의 공통외접선과 원주각 (최고난도)", "공통외접선과 직각삼각형 보조선 (보조선 킬러)", "내접원 접점 분할 정리 (킬러)"]
+      };
+
+      const domainKeys = Object.keys(domainCategories);
+      const radarScores = domainKeys.map(domain => {
+        const subList = domainCategories[domain];
+        let tot = 0, cor = 0;
+        
+        Object.entries(data.topicStats || {}).forEach(([subTopic, stat]) => {
+          if (subList.some(target => subTopic.includes(target) || target.includes(subTopic))) {
+            tot += stat.total;
+            cor += stat.correct;
+          }
+        });
+
+        // 집계 데이터가 없을 경우 기본 기본치(80%) 또는 계산된 실제 백분율
+        return tot > 0 ? Math.round((cor / tot) * 100) : 80;
+      });
+
       const ctxRadar = document.getElementById('chartTopicRadar').getContext('2d');
       if (radarChartInstance) radarChartInstance.destroy();
-
-      const topics = [
-        "삼각비의 뜻/특수각",
-        "삼각비 활용(넓이/높이)",
-        "원의 중심과 현",
-        "원주각과 내접사각형",
-        "접현각과 접선의 성질"
-      ];
-
-      const radarRates = [92, 75, 88, 80, 65];
 
       radarChartInstance = new Chart(ctxRadar, {
         type: 'radar',
         data: {
-          labels: topics,
+          labels: domainKeys,
           datasets: [{
-            label: '이해도 (%)',
-            data: radarRates,
+            label: '영역별 정답률 (%)',
+            data: radarScores,
             borderColor: '#4f46e5',
-            backgroundColor: 'rgba(79, 70, 229, 0.2)',
-            borderWidth: 2,
-            pointBackgroundColor: '#4f46e5'
+            backgroundColor: 'rgba(79, 70, 229, 0.22)',
+            borderWidth: 2.5,
+            pointBackgroundColor: '#4f46e5',
+            pointRadius: 4
           }]
         },
         options: {
           responsive: true,
           maintainAspectRatio: false,
           scales: {
-            r: { min: 0, max: 100, ticks: { stepSize: 25, display: false } }
+            r: { min: 0, max: 100, ticks: { stepSize: 20, display: false } }
           }
         }
       });
 
+      // 3. 세부 소단원별 프로그레스 바 렌더링
       const barsContainer = document.getElementById('portfolioTopicBars');
       barsContainer.innerHTML = "";
 
       const topicList = Object.entries(data.topicStats || {});
       if (topicList.length === 0) {
-        barsContainer.innerHTML = "<p class='text-xs text-slate-400'>아직 누적된 문항별 로그가 부족합니다.</p>";
+        barsContainer.innerHTML = "<p class='text-xs text-slate-400 col-span-2 text-center py-4'>아직 누적된 문항별 로그가 부족합니다.</p>";
         return;
       }
 
@@ -2055,7 +2087,7 @@
           </div>
           <div class="w-full bg-slate-200 h-2 rounded-full overflow-hidden">
             <div class="h-full rounded-full ${
-              pct >= 80 ? 'bg-green-500' : pct >= 60 ? 'bg-blue-500' : 'bg-rose-500'
+              pct >= 80 ? 'bg-emerald-500' : pct >= 60 ? 'bg-sky-500' : 'bg-rose-500'
             }" style="width: ${pct}%;"></div>
           </div>
         `;
@@ -2067,13 +2099,30 @@
       const feedbackEl = document.getElementById('portfolioAiFeedback');
       const latestScore = data.rounds.length > 0 ? data.rounds[data.rounds.length - 1].totalScore : 80;
 
+      // 실제 오답률이 가장 높은 취약 소단원 자동 탐색
+      let lowestTopic = "";
+      let lowestRate = 101;
+      Object.entries(data.topicStats || {}).forEach(([topic, stat]) => {
+        if (stat.total >= 2) {
+          const rate = (stat.correct / stat.total) * 100;
+          if (rate < lowestRate) {
+            lowestRate = rate;
+            lowestTopic = topic;
+          }
+        }
+      });
+
+      let weakAdvice = lowestTopic 
+        ? `특히 <strong>[${lowestTopic}]</strong> 소단원(정답률 ${Math.round(lowestRate)}%)에서 보조선 작도나 공식 적용에 혼선이 발견되므로, 이 유형의 오답 노트를 우선 점검할 것을 권장합니다.`
+        : `보조선을 활용하는 복합 기하 킬러 문항에 대해 단계별 풀이 과정을 집중 훈련하세요.`;
+
       let coaching = "";
       if (latestScore >= 90) {
-        coaching = `<strong>${state.studentName}</strong> 학생은 삼각비의 기본 정의부터 원의 복합 보조선 기하까지 전 단원에서 매우 뛰어난 성취도를 보여주고 있습니다. 특히 입체도형 삼각비와 접현각 고난도 문항에서도 흔들림 없는 연산 능력을 발휘하고 있으므로 실전 기말고사에서 100점을 목표로 해도 좋습니다.`;
+        coaching = `<strong>${state.studentName}</strong> 학생은 삼각비와 원의 성질 전 영역에서 매우 탄탄한 기하 개념과 연산 능력을 증명하고 있습니다. 최고난도 킬러 문항까지 안정적으로 해결하고 있으므로, 실전 기말시험에서 100점을 충분히 기대할 수 있습니다. ${weakAdvice}`;
       } else if (latestScore >= 70) {
-        coaching = `<strong>${state.studentName}</strong> 학생은 삼각비의 기본값 및 원주각과 중심각의 성질을 완벽히 이해하고 있습니다. 다만, '원의 접선과 접현각' 및 '일반 삼각형의 높이 구하기'와 같은 보조선 활용 유형에서 오답이 발생하고 있습니다. 직각을 만들어내는 보조선 긋기 연습을 3~4문항 집중 보완하면 즉시 90점대 도달이 가능합니다.`;
+        coaching = `<strong>${state.studentName}</strong> 학생은 기본 특수각 연산과 원주각의 핵심 성질을 충실히 습득하고 있습니다. 다만 난이도 [상] 및 킬러 문제에서 직각을 도출하는 보조선 긋기에서 일부 실수가 있습니다. ${weakAdvice}`;
       } else {
-        coaching = `<strong>${state.studentName}</strong> 학생은 특수각 삼각비($30^\\circ, 45^\\circ, 60^\\circ$)의 기본 연산과 중심각-원주각 1:2 관계 공식 복습이 우선 권장됩니다. 오답 노트를 통해 틀린 문제의 1단계 공식을 차근차근 다시 작성해 보세요!`;
+        coaching = `<strong>${state.studentName}</strong> 학생은 $30^\\circ, 45^\\circ, 60^\\circ$ 특수각 삼각비의 기본값 정리와 '중심각은 원주각의 2배'라는 핵심 공식의 복습이 시급합니다. 틀린 문제 풀이를 다시 읽어보며 기본 개념을 바로잡아 보세요!`;
       }
 
       feedbackEl.innerHTML = coaching;
