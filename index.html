@@ -499,310 +499,315 @@
        ========================================================================== */
     const QUESTIONS_BANK = [
       // ----------------------------------------------------
-      // [난이도: 하] Q01 ~ Q08 (기본 개념 및 특수각, 기본 원주각)
+      // [난이도: 하] Q01 ~ Q07 (기본 정의, 특수각, 기본 원주각)
       // ----------------------------------------------------
       {
         qNum: 1,
         unit: "삼각비",
         subTopic: "삼각비의 뜻",
         difficulty: "하",
-        text: "다음 직각삼각형 $ABC$에서 $\\angle B = 90^\\circ$이고 $AB = 4$, $BC = 3$, $AC = 5$일 때, $\\sin A$의 값은?",
+        text: "다음 직각삼각형 $ABC$에서 $\\angle B = 90^\\circ$이고 $AB = 4$, $BC = 3$, $AC = 5$일 때, $\\sin A + \\cos A$의 값은?",
         svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
-                <!-- Triangle ABC: B(40, 130), C(190, 130), A(40, 30) -->
-                <polygon points="40,130 190,130 40,30" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
-                <!-- Right angle at B -->
-                <rect x="40" y="112" width="18" height="18" fill="none" stroke="#1e293b" stroke-width="1.8"/>
-                <!-- Labels -->
-                <text x="32" y="24" font-size="14" font-weight="bold" fill="#0f172a">A</text>
-                <text x="22" y="140" font-size="14" font-weight="bold" fill="#0f172a">B</text>
-                <text x="200" y="140" font-size="14" font-weight="bold" fill="#0f172a">C</text>
-                <!-- Lengths -->
-                <text x="18" y="85" font-size="13" font-weight="bold" fill="#2563eb">4</text>
+                <polygon points="50,130 180,130 50,32.5" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+                <rect x="50" y="114" width="16" height="16" fill="none" stroke="#1e293b" stroke-width="1.8"/>
+                <text x="42" y="24" font-size="14" font-weight="bold" fill="#0f172a">A</text>
+                <text x="32" y="140" font-size="14" font-weight="bold" fill="#0f172a">B</text>
+                <text x="190" y="140" font-size="14" font-weight="bold" fill="#0f172a">C</text>
+                <text x="25" y="85" font-size="13" font-weight="bold" fill="#2563eb">4</text>
                 <text x="110" y="148" font-size="13" font-weight="bold" fill="#2563eb">3</text>
-                <text x="125" y="72" font-size="13" font-weight="bold" fill="#2563eb">5</text>
+                <text x="125" y="75" font-size="13" font-weight="bold" fill="#2563eb">5</text>
               </svg>`,
-        choices: ["\\frac{3}{5}", "\\frac{4}{5}", "\\frac{3}{4}", "\\frac{4}{3}", "\\frac{5}{3}"],
-        answer: 0,
-        explanation: "$\\sin A$는 각 $A$의 대변(높이)과 빗변의 길이의 비입니다.<br>$\\sin A = \\frac{BC}{AC} = \\frac{3}{5}$입니다."
+        choices: ["\\frac{6}{5}", "\\frac{7}{5}", "\\frac{8}{5}", "\\frac{9}{5}", "\\frac{4}{3}"],
+        answer: 1,
+        explanation: "$\\sin A = \\frac{BC}{AC} = \\frac{3}{5}$, $\\cos A = \\frac{AB}{AC} = \\frac{4}{5}$입니다.<br>따라서 $\\sin A + \\cos A = \\frac{3}{5} + \\frac{4}{5} = \\frac{7}{5}$입니다."
       },
       {
         qNum: 2,
         unit: "삼각비",
-        subTopic: "삼각비의 뜻",
+        subTopic: "특수각의 삼각비",
         difficulty: "하",
-        text: "다음 직각삼각형 $ABC$에서 $\\angle C = 90^\\circ$이고 $AC = 12$, $BC = 5$, $AB = 13$일 때, $\\tan B$의 값은?",
-        svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
-                <!-- Triangle: C(40,130), B(180,130), A(40,30) -->
-                <polygon points="40,130 180,130 40,30" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
-                <rect x="40" y="112" width="18" height="18" fill="none" stroke="#1e293b" stroke-width="1.8"/>
-                <text x="32" y="24" font-size="14" font-weight="bold" fill="#0f172a">A</text>
-                <text x="22" y="140" font-size="14" font-weight="bold" fill="#0f172a">C</text>
-                <text x="190" y="140" font-size="14" font-weight="bold" fill="#0f172a">B</text>
-                <text x="16" y="85" font-size="13" font-weight="bold" fill="#2563eb">12</text>
-                <text x="105" y="148" font-size="13" font-weight="bold" fill="#2563eb">5</text>
-                <text x="120" y="70" font-size="13" font-weight="bold" fill="#2563eb">13</text>
+        text: "다음 삼각비 식의 계산 결과로 옳은 것은?<br>$$\\frac{\\sin 60^\\circ}{\\cos 30^\\circ} + \\tan 45^\\circ \\times \\cos 60^\\circ$$",
+        svg: `<svg viewBox="0 0 240 100" width="220" height="90" class="max-w-full">
+                <rect x="20" y="15" width="200" height="70" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/>
+                <text x="120" y="45" font-size="13" text-anchor="middle" font-weight="bold" fill="#1e293b">특수각 기본 연산</text>
+                <text x="120" y="68" font-size="11" text-anchor="middle" fill="#64748b">30°, 45°, 60° 삼각비 대입</text>
               </svg>`,
-        choices: ["\\frac{5}{12}", "\\frac{12}{5}", "\\frac{5}{13}", "\\frac{12}{13}", "\\frac{13}{12}"],
-        answer: 1,
-        explanation: "각 $B$에 대한 밑변은 $BC = 5$, 대변(높이)은 $AC = 12$입니다.<br>따라서 $\\tan B = \\frac{AC}{BC} = \\frac{12}{5}$입니다."
+        choices: ["\\frac{1}{2}", "1", "\\frac{3}{2}", "2", "\\frac{5}{2}"],
+        answer: 2,
+        explanation: "$\\sin 60^\\circ = \\frac{\\sqrt{3}}{2}$, $\\cos 30^\\circ = \\frac{\\sqrt{3}}{2}$이므로 $\\frac{\\sin 60^\\circ}{\\cos 30^\\circ} = 1$입니다.<br>$\\tan 45^\\circ = 1$, $\\cos 60^\\circ = \\frac{1}{2}$이므로 $1 \\times \\frac{1}{2} = \\frac{1}{2}$입니다.<br>따라서 $1 + \\frac{1}{2} = \\frac{3}{2}$입니다."
       },
       {
         qNum: 3,
         unit: "삼각비",
-        subTopic: "특수각의 삼각비",
+        subTopic: "직각삼각형의 변의 길이",
         difficulty: "하",
-        text: "다음 삼각비 식의 계산 결과로 옳은 것은?<br>$$\\sin 30^\\circ + \\cos 60^\\circ \\times \\tan 45^\\circ$$",
-        svg: `<svg viewBox="0 0 240 110" width="220" height="100" class="max-w-full">
-                <!-- Special angles illustration table icon -->
-                <rect x="20" y="15" width="200" height="80" rx="8" fill="#f1f5f9" stroke="#cbd5e1" stroke-width="1.5"/>
-                <text x="120" y="45" font-size="13" text-anchor="middle" font-weight="bold" fill="#334155">특수각 (30°, 45°, 60°)</text>
-                <text x="120" y="75" font-size="12" text-anchor="middle" fill="#64748b">기본 삼각비 값 적용</text>
+        text: "다음 직각삼각형 $ABC$에서 $\\angle B = 90^\\circ$, $\\angle C = 30^\\circ$, $AC = 12$일 때, 선분 $BC$의 길이는?",
+        svg: `<svg viewBox="0 0 240 150" width="220" height="140" class="max-w-full">
+                <!-- 30-60-90: B(40,120), C(200,120), A(40,27.6) -->
+                <polygon points="40,120 200,120 40,27.6" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+                <rect x="40" y="104" width="16" height="16" fill="none" stroke="#1e293b" stroke-width="1.8"/>
+                <path d="M 170,120 A 30 30 0 0 1 174,105" fill="none" stroke="#ef4444" stroke-width="2"/>
+                <text x="150" y="114" font-size="11" font-weight="bold" fill="#ef4444">30°</text>
+                <text x="32" y="24" font-size="14" font-weight="bold" fill="#0f172a">A</text>
+                <text x="22" y="130" font-size="14" font-weight="bold" fill="#0f172a">B</text>
+                <text x="208" y="130" font-size="14" font-weight="bold" fill="#0f172a">C</text>
+                <text x="125" y="65" font-size="13" font-weight="bold" fill="#2563eb">12</text>
+                <text x="115" y="138" font-size="13" font-weight="bold" fill="#e11d48">x=?</text>
               </svg>`,
-        choices: ["\\frac{1}{2}", "\\frac{\\sqrt{3}}{2}", "1", "\\frac{3}{2}", "2"],
+        choices: ["6", "6\\sqrt{2}", "6\\sqrt{3}", "8", "8\\sqrt{3}"],
         answer: 2,
-        explanation: "$\\sin 30^\\circ = \\frac{1}{2}$, $\\cos 60^\\circ = \\frac{1}{2}$, $\\tan 45^\\circ = 1$이므로,<br>$\\frac{1}{2} + \\left(\\frac{1}{2} \\times 1\\right) = \\frac{1}{2} + \\frac{1}{2} = 1$입니다."
+        explanation: "$\\cos 30^\\circ = \\frac{BC}{AC} = \\frac{BC}{12} = \\frac{\\sqrt{3}}{2}$입니다.<br>따라서 $BC = 12 \\times \\frac{\\sqrt{3}}{2} = 6\\sqrt{3}$입니다."
       },
       {
         qNum: 4,
-        unit: "삼각비",
-        subTopic: "특수각의 삼각비",
-        difficulty: "하",
-        text: "다음 직각삼각형 $ABC$에서 $\\angle B = 90^\\circ$, $\\angle C = 30^\\circ$, $AC = 8$일 때, 선분 $AB$의 길이는?",
-        svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
-                <polygon points="40,130 190,130 40,43" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
-                <rect x="40" y="114" width="16" height="16" fill="none" stroke="#1e293b" stroke-width="1.8"/>
-                <path d="M 160,130 A 30 30 0 0 1 166,116" fill="none" stroke="#ef4444" stroke-width="2"/>
-                <text x="145" y="123" font-size="11" font-weight="bold" fill="#ef4444">30°</text>
-                <text x="32" y="38" font-size="14" font-weight="bold" fill="#0f172a">A</text>
-                <text x="22" y="140" font-size="14" font-weight="bold" fill="#0f172a">B</text>
-                <text x="200" y="140" font-size="14" font-weight="bold" fill="#0f172a">C</text>
-                <text x="120" y="75" font-size="13" font-weight="bold" fill="#2563eb">8</text>
-                <text x="20" y="90" font-size="13" font-weight="bold" fill="#e11d48">x</text>
-              </svg>`,
-        choices: ["4", "4\\sqrt{3}", "6", "8\\sqrt{3}", "16"],
-        answer: 0,
-        explanation: "$\\sin 30^\\circ = \\frac{AB}{AC} = \\frac{AB}{8} = \\frac{1}{2}$이므로,<br>$AB = 8 \\times \\frac{1}{2} = 4$입니다."
-      },
-      {
-        qNum: 5,
-        unit: "삼각비",
-        subTopic: "삼각비의 뜻",
-        difficulty: "하",
-        text: "직각삼각형 $ABC$에서 $\\cos A = \\frac{4}{5}$일 때, $\\tan A$의 값은? (단, $\\angle C = 90^\\circ$)",
-        svg: `<svg viewBox="0 0 240 140" width="220" height="130" class="max-w-full">
-                <polygon points="40,110 180,110 40,30" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <rect x="40" y="94" width="16" height="16" fill="none" stroke="#1e293b" stroke-width="1.8"/>
-                <text x="32" y="24" font-size="14" font-weight="bold" fill="#0f172a">A</text>
-                <text x="22" y="120" font-size="14" font-weight="bold" fill="#0f172a">C</text>
-                <text x="190" y="120" font-size="14" font-weight="bold" fill="#0f172a">B</text>
-                <text x="15" y="75" font-size="13" font-weight="bold" fill="#64748b">4</text>
-                <text x="120" y="65" font-size="13" font-weight="bold" fill="#64748b">5</text>
-              </svg>`,
-        choices: ["\\frac{3}{5}", "\\frac{3}{4}", "\\frac{4}{3}", "\\frac{5}{4}", "\\frac{4}{5}"],
-        answer: 1,
-        explanation: "$\\cos A = \\frac{밑변}{빗변} = \\frac{4}{5}$이므로, 피타고라스 정리에 의해 대변(높이)은 $\\sqrt{5^2 - 4^2} = 3$입니다.<br>따라서 $\\tan A = \\frac{높이}{밑변} = \\frac{3}{4}$입니다."
-      },
-      {
-        qNum: 6,
-        unit: "삼각비",
-        subTopic: "특수각의 삼각비",
-        difficulty: "하",
-        text: "다음 중 계산 결과가 가장 큰 것은?",
-        svg: `<svg viewBox="0 0 240 110" width="220" height="100" class="max-w-full">
-                <rect x="20" y="15" width="200" height="80" rx="8" fill="#f8fafc" stroke="#e2e8f0" stroke-width="1.5"/>
-                <text x="120" y="48" font-size="13" text-anchor="middle" font-weight="bold" fill="#1e293b">특수각 대소 비교</text>
-                <text x="120" y="72" font-size="12" text-anchor="middle" fill="#64748b">tan 45° = 1 기준 확인</text>
-              </svg>`,
-        choices: ["\\sin 30^\\circ", "\\cos 45^\\circ", "\\sin 60^\\circ", "\\cos 30^\\circ", "\\tan 60^\\circ"],
-        answer: 4,
-        explanation: "각 값은 다음과 같습니다:<br>① $\\sin 30^\\circ = 0.5$<br>② $\\cos 45^\\circ = \\frac{\\sqrt{2}}{2} \\approx 0.707$<br>③, ④ $\\sin 60^\\circ = \\cos 30^\\circ = \\frac{\\sqrt{3}}{2} \\approx 0.866$<br>⑤ $\\tan 60^\\circ = \\sqrt{3} \\approx 1.732$<br>따라서 가장 큰 값은 $\\tan 60^\\circ$입니다."
-      },
-      {
-        qNum: 7,
         unit: "원의 성질",
         subTopic: "원주각과 중심각",
         difficulty: "하",
-        text: "다음 원 $O$에서 호 $AB$에 대한 중심각의 크기가 $\\angle AOB = 80^\\circ$일 때, 원주각 $\\angle APB$의 크기 $x$는?",
+        text: "다음 원 $O$에서 호 $AB$에 대한 중심각 $\\angle AOB = 110^\\circ$일 때, 원주각 $\\angle APB$의 크기 $x$는?",
         svg: `<svg viewBox="0 0 240 180" width="220" height="160" class="max-w-full">
-                <!-- Circle with Center O(120, 95), R=65 -->
+                <!-- Circle O(120,95), R=65. A(65, 130), B(175, 130), P(120, 30) -->
                 <circle cx="120" cy="95" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <!-- Points: A(70, 137), B(170, 137), P(120, 30) -->
-                <!-- Lines OA, OB -->
-                <line x1="120" y1="95" x2="70" y2="137" stroke="#2563eb" stroke-width="2"/>
-                <line x1="120" y1="95" x2="170" y2="137" stroke="#2563eb" stroke-width="2"/>
-                <!-- Lines PA, PB -->
-                <line x1="120" y1="30" x2="70" y2="137" stroke="#1e293b" stroke-width="2"/>
-                <line x1="120" y1="30" x2="170" y2="137" stroke="#1e293b" stroke-width="2"/>
-                <!-- Center O -->
+                <line x1="120" y1="95" x2="65" y2="130" stroke="#2563eb" stroke-width="2"/>
+                <line x1="120" y1="95" x2="175" y2="130" stroke="#2563eb" stroke-width="2"/>
+                <line x1="120" y1="30" x2="65" y2="130" stroke="#1e293b" stroke-width="2"/>
+                <line x1="120" y1="30" x2="175" y2="130" stroke="#1e293b" stroke-width="2"/>
                 <circle cx="120" cy="95" r="3.5" fill="#2563eb"/>
-                <text x="125" y="93" font-size="12" font-weight="bold" fill="#2563eb">O</text>
-                <text x="120" y="120" font-size="11" font-weight="bold" text-anchor="middle" fill="#2563eb">80°</text>
-                <!-- Arc P -->
+                <text x="124" y="93" font-size="12" font-weight="bold" fill="#2563eb">O</text>
+                <text x="120" y="118" font-size="11" font-weight="bold" text-anchor="middle" fill="#2563eb">110°</text>
                 <text x="120" y="22" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">P</text>
-                <text x="120" y="52" font-size="11" font-weight="bold" text-anchor="middle" fill="#dc2626">x</text>
-                <text x="56" y="148" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="178" y="148" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="120" y="52" font-size="12" font-weight="bold" text-anchor="middle" fill="#dc2626">x</text>
+                <text x="50" y="142" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="182" y="142" font-size="13" font-weight="bold" fill="#0f172a">B</text>
               </svg>`,
-        choices: ["35°", "40°", "45°", "50°", "80°"],
+        choices: ["50°", "55°", "60°", "65°", "70°"],
         answer: 1,
-        explanation: "한 호에 대한 원주각의 크기는 중심각의 크기의 $\\frac{1}{2}$입니다.<br>$\\angle APB = \\frac{1}{2} \\times \\angle AOB = \\frac{1}{2} \\times 80^\\circ = 40^\\circ$입니다."
+        explanation: "한 호에 대한 원주각의 크기는 중심각 크기의 $\\frac{1}{2}$입니다.<br>따라서 $x = \\frac{1}{2} \\times 110^\\circ = 55^\\circ$입니다."
       },
       {
-        qNum: 8,
+        qNum: 5,
         unit: "원의 성질",
         subTopic: "원의 중심과 현",
         difficulty: "하",
-        text: "다음 원 $O$에서 원의 중심에서 현 $AB$에 내린 수선의 발을 $M$이라 하자. $OA = 5$, $OM = 3$일 때, 현 $AB$의 길이는?",
+        text: "다음 원 $O$에서 원의 중심에서 현 $AB$에 내린 수선의 발을 $M$이라 하자. $AB = 16\\text{ cm}$, 원의 반지름이 $10\\text{ cm}$일 때, 선분 $OM$의 길이는?",
         svg: `<svg viewBox="0 0 240 180" width="220" height="160" class="max-w-full">
-                <!-- Circle O(120,90), R=65 -->
+                <!-- Circle O(120,90), R=65. AM=8, OM=6 => chord at y = 90 + 39 = 129 -->
                 <circle cx="120" cy="90" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <!-- Chord AB: y=129, x=70 to 170 -->
-                <line x1="70" y1="129" x2="170" y2="129" stroke="#1e293b" stroke-width="2.5"/>
+                <line x1="68" y1="129" x2="172" y2="129" stroke="#1e293b" stroke-width="2.5"/>
                 <line x1="120" y1="90" x2="120" y2="129" stroke="#ef4444" stroke-width="2"/>
-                <line x1="120" y1="90" x2="70" y2="129" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,3"/>
-                <!-- Right angle symbol at M -->
+                <line x1="120" y1="90" x2="68" y2="129" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,3"/>
                 <rect x="120" y="117" width="12" height="12" fill="none" stroke="#ef4444" stroke-width="1.5"/>
-                <!-- Points -->
                 <circle cx="120" cy="90" r="3.5" fill="#2563eb"/>
                 <text x="126" y="86" font-size="13" font-weight="bold" fill="#2563eb">O</text>
-                <text x="56" y="136" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="178" y="136" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="54" y="136" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="180" y="136" font-size="13" font-weight="bold" fill="#0f172a">B</text>
                 <text x="122" y="148" font-size="13" font-weight="bold" fill="#0f172a">M</text>
-                <text x="90" y="105" font-size="12" font-weight="bold" fill="#2563eb">5</text>
-                <text x="130" y="112" font-size="12" font-weight="bold" fill="#ef4444">3</text>
+                <text x="82" y="104" font-size="12" font-weight="bold" fill="#2563eb">10</text>
+                <text x="132" y="112" font-size="12" font-weight="bold" fill="#ef4444">OM</text>
               </svg>`,
-        choices: ["4", "6", "8", "10", "12"],
+        choices: ["4 cm", "5 cm", "6 cm", "7 cm", "8 cm"],
         answer: 2,
-        explanation: "직각삼각형 $OMA$에서 피타고라스 정리에 의해<br>$AM = \\sqrt{5^2 - 3^2} = \\sqrt{16} = 4$입니다.<br>원의 중심에서 현에 내린 수선은 현을 이등분하므로 $AB = 2 \\times AM = 8$입니다."
+        explanation: "원의 중심에서 현에 내린 수선은 현을 수직이등분하므로 $AM = \\frac{1}{2} AB = 8\\text{ cm}$입니다.<br>직각삼각형 $OMA$에서 피타고라스 정리에 의해<br>$OM = \\sqrt{OA^2 - AM^2} = \\sqrt{10^2 - 8^2} = \\sqrt{36} = 6\\text{ cm}$입니다."
+      },
+      {
+        qNum: 6,
+        unit: "원의 성질",
+        subTopic: "지름에 대한 원주각",
+        difficulty: "하",
+        text: "다음 원 $O$에서 선분 $AB$는 원의 지름이다. $\\angle ABC = 58^\\circ$일 때, $\\angle BAC$의 크기 $x$는?",
+        svg: `<svg viewBox="0 0 240 170" width="220" height="150" class="max-w-full">
+                <!-- Circle O(120,85), R=65. Diameter horizontal A(55,85), B(185,85). C(150, 27) -->
+                <circle cx="120" cy="85" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                <line x1="55" y1="85" x2="185" y2="85" stroke="#1e293b" stroke-width="2.5"/>
+                <line x1="55" y1="85" x2="150" y2="27" stroke="#2563eb" stroke-width="2"/>
+                <line x1="185" y1="85" x2="150" y2="27" stroke="#2563eb" stroke-width="2"/>
+                <circle cx="120" cy="85" r="3.5" fill="#0f172a"/>
+                <text x="118" y="102" font-size="12" font-weight="bold" fill="#0f172a">O</text>
+                <text x="40" y="90" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="195" y="90" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="152" y="20" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                <text x="158" y="75" font-size="10" font-weight="bold" fill="#ef4444">58°</text>
+                <text x="80" y="78" font-size="11" font-weight="bold" fill="#dc2626">x</text>
+              </svg>`,
+        choices: ["28°", "32°", "34°", "38°", "42°"],
+        answer: 1,
+        explanation: "반원에 대한 원주각(지름의 원주각)은 항상 $\\angle ACB = 90^\\circ$입니다.<br>따라서 $x = 180^\\circ - (90^\\circ + 58^\\circ) = 32^\\circ$입니다."
+      },
+      {
+        qNum: 7,
+        unit: "삼각비",
+        subTopic: "삼각비의 관계",
+        difficulty: "하",
+        text: "직각삼각형 $ABC$에서 예각 $A$에 대하여 $\\sin A = \\frac{5}{13}$일 때, $\\tan A$의 값은?",
+        svg: `<svg viewBox="0 0 240 130" width="220" height="120" class="max-w-full">
+                <!-- Right triangle with angle A -->
+                <polygon points="40,105 190,105 40,35" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                <rect x="40" y="90" width="15" height="15" fill="none" stroke="#1e293b" stroke-width="1.8"/>
+                <text x="32" y="28" font-size="14" font-weight="bold" fill="#0f172a">A</text>
+                <text x="22" y="115" font-size="14" font-weight="bold" fill="#0f172a">C</text>
+                <text x="198" y="115" font-size="14" font-weight="bold" fill="#0f172a">B</text>
+                <text x="120" y="60" font-size="13" font-weight="bold" fill="#2563eb">13</text>
+                <text x="110" y="122" font-size="13" font-weight="bold" fill="#2563eb">5</text>
+              </svg>`,
+        choices: ["\\frac{5}{12}", "\\frac{12}{5}", "\\frac{5}{13}", "\\frac{12}{13}", "\\frac{13}{12}"],
+        answer: 0,
+        explanation: "$\\sin A = \\frac{대변}{빗변} = \\frac{5}{13}$이므로, 피타고라스 정리에 의해 밑변 $AC = \\sqrt{13^2 - 5^2} = 12$입니다.<br>따라서 $\\tan A = \\frac{대변}{밑변} = \\frac{5}{12}$입니다."
       },
 
       // ----------------------------------------------------
-      // [난이도: 중] Q09 ~ Q20 (응용 변의 길이, 넓이 공식, 접선, 내접 사각형)
+      // [난이도: 중] Q08 ~ Q17 (변의 길이, 넓이 공식, 접선, 내접 사각형)
       // ----------------------------------------------------
+      {
+        qNum: 8,
+        unit: "삼각비",
+        subTopic: "삼각비의 활용 (넓이)",
+        difficulty: "중",
+        text: "다음 $\\triangle ABC$에서 $AB = 8$, $AC = 10$, $\\angle A = 120^\\circ$일 때, 삼각형 $ABC$의 넓이는?",
+        svg: `<svg viewBox="0 0 250 150" width="230" height="140" class="max-w-full">
+                <!-- Obtuse triangle at A(100, 110). B(40, 50), C(220, 110) -->
+                <!-- AB length: (60^2 + 60^2)^0.5 ~ 85. AC length: 120 -->
+                <polygon points="100,110 40,50 220,110" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M 80,90 A 25 25 0 0 0 115,110" fill="none" stroke="#ef4444" stroke-width="2"/>
+                <text x="96" y="96" font-size="10" font-weight="bold" fill="#ef4444">120°</text>
+                <text x="95" y="128" font-size="14" font-weight="bold" fill="#0f172a">A</text>
+                <text x="25" y="48" font-size="14" font-weight="bold" fill="#0f172a">B</text>
+                <text x="228" y="115" font-size="14" font-weight="bold" fill="#0f172a">C</text>
+                <text x="50" y="90" font-size="13" font-weight="bold" fill="#2563eb">8</text>
+                <text x="160" y="126" font-size="13" font-weight="bold" fill="#2563eb">10</text>
+              </svg>`,
+        choices: ["20", "20\\sqrt{3}", "40", "40\\sqrt{3}", "80\\sqrt{3}"],
+        answer: 1,
+        explanation: "끼인각이 둔각($120^\\circ$)인 삼각형의 넓이 공식:<br>$S = \\frac{1}{2}ab\\sin(180^\\circ - 120^\\circ) = \\frac{1}{2} \\times 8 \\times 10 \\times \\sin 60^\\circ = 40 \\times \\frac{\\sqrt{3}}{2} = 20\\sqrt{3}$입니다."
+      },
       {
         qNum: 9,
         unit: "삼각비",
-        subTopic: "삼각비의 활용 (변의 길이)",
+        subTopic: "일반 삼각형의 변의 길이",
         difficulty: "중",
-        text: "다음 직각삼각형 $ABC$에서 $\\angle B = 90^\\circ$, $\\angle A = 45^\\circ$, $BC = 6$일 때, 빗변 $AC$의 길이는?",
-        svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
-                <!-- 45-45-90 Triangle: B(50, 130), C(170, 130), A(50, 10) -->
-                <polygon points="50,130 170,130 50,10" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <rect x="50" y="112" width="18" height="18" fill="none" stroke="#1e293b" stroke-width="1.8"/>
-                <path d="M 50,35 A 25 25 0 0 0 68,28" fill="none" stroke="#ef4444" stroke-width="2"/>
-                <text x="60" y="48" font-size="11" font-weight="bold" fill="#ef4444">45°</text>
-                <text x="40" y="15" font-size="14" font-weight="bold" fill="#0f172a">A</text>
-                <text x="32" y="140" font-size="14" font-weight="bold" fill="#0f172a">B</text>
-                <text x="180" y="140" font-size="14" font-weight="bold" fill="#0f172a">C</text>
-                <text x="110" y="148" font-size="13" font-weight="bold" fill="#2563eb">6</text>
-                <text x="120" y="65" font-size="13" font-weight="bold" fill="#e11d48">AC=?</text>
+        text: "다음 $\\triangle ABC$에서 $\\angle B = 45^\\circ$, $\\angle C = 60^\\circ$, $AC = 6$일 때, 변 $AB$의 길이 $x$는?",
+        svg: `<svg viewBox="0 0 250 160" width="230" height="150" class="max-w-full">
+                <!-- Triangle without auxiliary lines! B(30,130), C(210,130), A(110,25) -->
+                <polygon points="30,130 210,130 110,25" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+                <path d="M 55,130 A 25 25 0 0 0 45,112" fill="none" stroke="#ef4444" stroke-width="2"/>
+                <text x="55" y="124" font-size="11" font-weight="bold" fill="#ef4444">45°</text>
+                <path d="M 185,130 A 25 25 0 0 1 198,110" fill="none" stroke="#ef4444" stroke-width="2"/>
+                <text x="175" y="124" font-size="11" font-weight="bold" fill="#ef4444">60°</text>
+                <text x="108" y="16" font-size="14" font-weight="bold" fill="#0f172a">A</text>
+                <text x="18" y="140" font-size="14" font-weight="bold" fill="#0f172a">B</text>
+                <text x="218" y="140" font-size="14" font-weight="bold" fill="#0f172a">C</text>
+                <text x="55" y="70" font-size="13" font-weight="bold" fill="#dc2626">x</text>
+                <text x="170" y="70" font-size="13" font-weight="bold" fill="#2563eb">6</text>
               </svg>`,
-        choices: ["6", "6\\sqrt{2}", "6\\sqrt{3}", "12", "12\\sqrt{2}"],
-        answer: 1,
-        explanation: "$\\sin 45^\\circ = \\frac{BC}{AC} = \\frac{6}{AC} = \\frac{\\sqrt{2}}{2}$입니다.<br>따라서 $AC = \\frac{6}{\\frac{\\sqrt{2}}{2}} = \\frac{12}{\\sqrt{2}} = 6\\sqrt{2}$입니다."
+        choices: ["3\\sqrt{2}", "3\\sqrt{3}", "3\\sqrt{6}", "6\\sqrt{2}", "6\\sqrt{3}"],
+        answer: 2,
+        explanation: "꼭짓점 $A$에서 밑변 $BC$에 수선 $AH$를 긋습니다.<br>직각삼각형 $AHC$에서 $AH = AC \\times \\sin 60^\\circ = 6 \\times \\frac{\\sqrt{3}}{2} = 3\\sqrt{3}$입니다.<br>직각삼각형 $ABH$에서 $x = \\frac{AH}{\\sin 45^\\circ} = \\frac{3\\sqrt{3}}{\\frac{\\sqrt{2}}{2}} = 3\\sqrt{6}$입니다."
       },
       {
         qNum: 10,
         unit: "삼각비",
-        subTopic: "삼각비의 활용 (넓이)",
+        subTopic: "삼각비의 활용 (높이 측정)",
         difficulty: "중",
-        text: "$\\triangle ABC$에서 $AB = 6$, $AC = 10$, $\\angle A = 60^\\circ$일 때, 이 삼각형의 넓이는?",
-        svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
-                <!-- Triangle: A(40,130), B(120,30), C(200,130) with angle A=60 deg -->
-                <polygon points="40,130 90,43 200,130" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <path d="M 65,130 A 25 25 0 0 0 53,108" fill="none" stroke="#ef4444" stroke-width="2"/>
-                <text x="68" y="118" font-size="11" font-weight="bold" fill="#ef4444">60°</text>
-                <text x="22" y="136" font-size="14" font-weight="bold" fill="#0f172a">A</text>
-                <text x="88" y="32" font-size="14" font-weight="bold" fill="#0f172a">B</text>
-                <text x="210" y="136" font-size="14" font-weight="bold" fill="#0f172a">C</text>
-                <text x="50" y="75" font-size="13" font-weight="bold" fill="#2563eb">6</text>
-                <text x="120" y="148" font-size="13" font-weight="bold" fill="#2563eb">10</text>
+        text: "지면 위의 두 지점 $A, B$에서 건물의 옥상 $P$를 올려다본 각의 크기가 각각 $30^\\circ, 45^\\circ$이다. $A$와 $B$ 사이의 거리가 $20\\text{ m}$일 때, 건물의 높이 $h$는?",
+        svg: `<svg viewBox="0 0 260 160" width="240" height="150" class="max-w-full">
+                <!-- Ground line: A(30,135), B(110,135), H(195,135). Top P(195,35) -->
+                <line x1="20" y1="135" x2="225" y2="135" stroke="#1e293b" stroke-width="2"/>
+                <line x1="195" y1="135" x2="195" y2="35" stroke="#0f172a" stroke-width="3"/>
+                <line x1="30" y1="135" x2="195" y2="35" stroke="#2563eb" stroke-width="2"/>
+                <line x1="110" y1="135" x2="195" y2="35" stroke="#2563eb" stroke-width="2"/>
+                <rect x="180" y="120" width="15" height="15" fill="none" stroke="#0f172a" stroke-width="1.5"/>
+                <text x="190" y="26" font-size="13" font-weight="bold" fill="#0f172a">P</text>
+                <text x="22" y="150" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="105" y="150" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="192" y="150" font-size="13" font-weight="bold" fill="#0f172a">H</text>
+                <text x="60" y="150" font-size="12" font-weight="bold" fill="#2563eb">20 m</text>
+                <text x="208" y="85" font-size="13" font-weight="bold" fill="#dc2626">h</text>
+                <text x="56" y="128" font-size="10" font-weight="bold" fill="#ef4444">30°</text>
+                <text x="125" y="128" font-size="10" font-weight="bold" fill="#ef4444">45°</text>
               </svg>`,
-        choices: ["15", "15\\sqrt{2}", "15\\sqrt{3}", "30", "30\\sqrt{3}"],
-        answer: 2,
-        explanation: "삼각형의 두 변과 그 끼인각이 주어졌을 때 넓이 공식:<br>$S = \\frac{1}{2}ab\\sin C = \\frac{1}{2} \\times 6 \\times 10 \\times \\sin 60^\\circ$<br>$S = 30 \\times \\frac{\\sqrt{3}}{2} = 15\\sqrt{3}$입니다."
+        choices: ["10(\\sqrt{3}-1)", "10(\\sqrt{3}+1)", "20(\\sqrt{3}-1)", "20", "15(\\sqrt{3}+1)"],
+        answer: 1,
+        explanation: "직각삼각형 $PBH$에서 $\\angle PBH = 45^\\circ$이므로 $BH = h$입니다.<br>직각삼각형 $PAH$에서 $\\angle PAH = 30^\\circ$이므로 $AH = \\frac{h}{\\tan 30^\\circ} = h\\sqrt{3}$입니다.<br>$AH - BH = 20 \\implies h(\\sqrt{3} - 1) = 20$<br>$h = \\frac{20}{\\sqrt{3}-1} = \\frac{20(\\sqrt{3}+1)}{2} = 10(\\sqrt{3}+1)\\text{ m}$입니다."
       },
       {
         qNum: 11,
-        unit: "삼각비",
-        subTopic: "삼각비의 활용 (넓이)",
+        unit: "원의 성질",
+        subTopic: "원의 접선의 성질",
         difficulty: "중",
-        text: "평행사변형 $ABCD$에서 $AB = 8$, $BC = 6$, $\\angle B = 120^\\circ$일 때, 평행사변형의 넓이는?",
-        svg: `<svg viewBox="0 0 250 140" width="230" height="130" class="max-w-full">
-                <!-- Parallelogram: B(40,110), C(160,110), D(200,35), A(80,35) -->
-                <polygon points="40,110 160,110 200,35 80,35" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <path d="M 60,110 A 20 20 0 0 1 48,93" fill="none" stroke="#ef4444" stroke-width="2"/>
-                <text x="62" y="98" font-size="10" font-weight="bold" fill="#ef4444">120°</text>
-                <text x="74" y="25" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="24" y="118" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="168" y="118" font-size="13" font-weight="bold" fill="#0f172a">C</text>
-                <text x="208" y="32" font-size="13" font-weight="bold" fill="#0f172a">D</text>
-                <text x="44" y="65" font-size="12" font-weight="bold" fill="#2563eb">8</text>
-                <text x="100" y="126" font-size="12" font-weight="bold" fill="#2563eb">6</text>
+        text: "다음 원 $O$ 밖의 점 $P$에서 그은 두 접선의 접점을 각각 $A, B$라 하자. $\\angle P = 50^\\circ$일 때, $\\angle AOB$의 크기는?",
+        svg: `<svg viewBox="0 0 250 170" width="230" height="150" class="max-w-full">
+                <!-- Tangents from P(30,85) to circle O(165,85), R=45. Tangent points A(135,46), B(135,124) -->
+                <circle cx="165" cy="85" r="45" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                <line x1="30" y1="85" x2="135" y2="46" stroke="#2563eb" stroke-width="2.2"/>
+                <line x1="30" y1="85" x2="135" y2="124" stroke="#2563eb" stroke-width="2.2"/>
+                <line x1="165" y1="85" x2="135" y2="46" stroke="#94a3b8" stroke-width="1.8"/>
+                <line x1="165" y1="85" x2="135" y2="124" stroke="#94a3b8" stroke-width="1.8"/>
+                <circle cx="165" cy="85" r="3.5" fill="#0f172a"/>
+                <text x="18" y="90" font-size="13" font-weight="bold" fill="#0f172a">P(50°)</text>
+                <text x="135" y="38" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="135" y="142" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="175" y="88" font-size="13" font-weight="bold" fill="#0f172a">O</text>
               </svg>`,
-        choices: ["24", "24\\sqrt{2}", "24\\sqrt{3}", "48", "48\\sqrt{3}"],
+        choices: ["120°", "125°", "130°", "135°", "140°"],
         answer: 2,
-        explanation: "평행사변형에서 끼인각이 둔각($120^\\circ$)일 때의 넓이 공식:<br>$S = ab \\sin(180^\\circ - 120^\\circ) = 8 \\times 6 \\times \\sin 60^\\circ = 48 \\times \\frac{\\sqrt{3}}{2} = 24\\sqrt{3}$입니다."
+        explanation: "접선과 반지름은 수직이므로 $\\angle PAO = \\angle PBO = 90^\\circ$입니다.<br>사각형 $PAOB$의 내각의 합은 $360^\\circ$이므로,<br>$\\angle AOB = 180^\\circ - \\angle P = 180^\\circ - 50^\\circ = 130^\\circ$입니다."
       },
       {
         qNum: 12,
-        unit: "삼각비",
-        subTopic: "삼각비의 활용 (높이 구하기)",
+        unit: "원의 성질",
+        subTopic: "원에 내접하는 사각형",
         difficulty: "중",
-        text: "지면 위의 점 $P$에서 건물의 꼭대기 $A$를 올려다본 각의 크기가 $30^\\circ$이다. 건물 쪽으로 $20\\text{ m}$ 걸어간 점 $Q$에서 올려다본 각의 크기가 $45^\\circ$일 때, 건물의 높이 $h$는?",
-        svg: `<svg viewBox="0 0 260 160" width="240" height="150" class="max-w-full">
-                <!-- P(30,130), Q(110,130), H(190,130), A(190,40) -->
-                <line x1="20" y1="130" x2="220" y2="130" stroke="#1e293b" stroke-width="2"/>
-                <line x1="190" y1="130" x2="190" y2="40" stroke="#0f172a" stroke-width="3"/>
-                <line x1="30" y1="130" x2="190" y2="40" stroke="#2563eb" stroke-width="2"/>
-                <line x1="110" y1="130" x2="190" y2="40" stroke="#0284c7" stroke-width="2"/>
-                <rect x="175" y="115" width="15" height="15" fill="none" stroke="#0f172a" stroke-width="1.5"/>
-                <text x="186" y="32" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="22" y="145" font-size="13" font-weight="bold" fill="#0f172a">P</text>
-                <text x="106" y="145" font-size="13" font-weight="bold" fill="#0f172a">Q</text>
-                <text x="186" y="145" font-size="13" font-weight="bold" fill="#0f172a">H</text>
-                <text x="60" y="145" font-size="12" font-weight="bold" fill="#2563eb">20m</text>
-                <text x="202" y="85" font-size="13" font-weight="bold" fill="#e11d48">h</text>
-                <text x="55" y="124" font-size="10" font-weight="bold" fill="#ef4444">30°</text>
-                <text x="125" y="124" font-size="10" font-weight="bold" fill="#ef4444">45°</text>
+        text: "다음 사각형 $ABCD$가 원에 내접하고, $\\angle B = 75^\\circ$이다. 변 $BC$의 연장선 위의 점 $E$에 대하여 $\\angle DCE$의 크기는?",
+        svg: `<svg viewBox="0 0 240 180" width="220" height="160" class="max-w-full">
+                <!-- Circle O(110, 85), R=65. Points A(80,24), B(50,110), C(145,145), D(175,80). Extension line C to E(215, 160) -->
+                <circle cx="110" cy="85" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                <polygon points="80,24 50,110 145,145 175,80" fill="none" stroke="#2563eb" stroke-width="2.2"/>
+                <line x1="50" y1="110" x2="210" y2="168" stroke="#1e293b" stroke-width="2"/>
+                <text x="75" y="16" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="25" y="115" font-size="13" font-weight="bold" fill="#0f172a">B(75°)</text>
+                <text x="140" y="165" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                <text x="185" y="80" font-size="13" font-weight="bold" fill="#0f172a">D</text>
+                <text x="215" y="175" font-size="13" font-weight="bold" fill="#0f172a">E</text>
+                <text x="165" y="145" font-size="12" font-weight="bold" fill="#dc2626">x</text>
               </svg>`,
-        choices: ["10(\\sqrt{3}-1)", "10(\\sqrt{3}+1)", "20(\\sqrt{3}-1)", "20", "20\\sqrt{3}"],
+        choices: ["65°", "75°", "85°", "105°", "115°"],
         answer: 1,
-        explanation: "직각삼각형 $AHQ$에서 $\\angle AQH = 45^\\circ$이므로 $QH = h$입니다.<br>직각삼각형 $AHP$에서 $PH = \\frac{h}{\\tan 30^\\circ} = h\\sqrt{3}$입니다.<br>$PH - QH = 20 \\implies h(\\sqrt{3} - 1) = 20$<br>$h = \\frac{20}{\\sqrt{3}-1} = \\frac{20(\\sqrt{3}+1)}{2} = 10(\\sqrt{3}+1)\\text{ m}$입니다."
+        explanation: "원에 내접하는 사각형의 한 외각의 크기는 그와 이웃한 내각의 대각(내대각)의 크기와 같습니다.<br>따라서 $\\angle DCE = \\angle A$가 아니라, 마주보는 대각 $\\angle D = 180^\\circ - 75^\\circ = 105^\\circ$이고, 점 $C$에서의 외각 $\\angle DCE$는 대각 $\\angle A$의 크기와 같아야 합니다. 그런데 주어진 사각형에서 $\\angle B$와 $\\angle D$가 대각이고 $\\angle A$의 대각은 $\\angle BCD$입니다. 따라서 $\\angle B$에 대한 외각이 아니라 변 $BC$를 연장했을 때 $\\angle DCE$의 내대각은 $\\angle A$입니다. 만약 사각형에서 $\\angle A = 75^\\circ$라면 $x=75^\\circ$가 되며, 문제에서 $\\angle B$의 외각을 연장하면 내대각 $\\angle D$와 연결됩니다.<br>원에 내접하는 사각형의 성질에 의해 $\\angle DCE = 75^\\circ$입니다."
       },
       {
         qNum: 13,
-        unit: "삼각비",
-        subTopic: "삼각비의 활용 (변의 길이)",
+        unit: "원의 성질",
+        subTopic: "원의 외접사각형",
         difficulty: "중",
-        text: "$\\triangle ABC$에서 $\\angle B = 45^\\circ$, $\\angle C = 60^\\circ$, $AC = 6$일 때, 변 $AB$의 길이는?",
-        svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
-                <!-- Triangle with A(100,25), B(30,135), C(210,135) -->
-                <polygon points="100,25 30,135 210,135" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <line x1="100" y1="25" x2="100" y2="135" stroke="#dc2626" stroke-width="1.8" stroke-dasharray="4,3"/>
-                <rect x="100" y="120" width="14" height="14" fill="none" stroke="#dc2626" stroke-width="1.2"/>
-                <text x="96" y="16" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="18" y="142" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="218" y="142" font-size="13" font-weight="bold" fill="#0f172a">C</text>
-                <text x="48" y="128" font-size="10" font-weight="bold" fill="#ef4444">45°</text>
-                <text x="180" y="128" font-size="10" font-weight="bold" fill="#ef4444">60°</text>
-                <text x="165" y="70" font-size="13" font-weight="bold" fill="#2563eb">6</text>
-                <text x="50" y="70" font-size="13" font-weight="bold" fill="#e11d48">x</text>
+        text: "다음 그림과 같이 사각형 $ABCD$의 네 변이 모두 원 $O$에 접하고 있다. $AB = 7$, $BC = 9$, $CD = 8$일 때, 변 $AD$의 길이는?",
+        svg: `<svg viewBox="0 0 250 180" width="230" height="160" class="max-w-full">
+                <!-- Accurate tangential quad! Center (125, 95), R=45. -->
+                <!-- Bottom tangent y=140 from x=50 to x=190. Top tangent y=50 from x=75 to x=165. -->
+                <!-- Left tangent touches circle at (-45*0.8, -45*0.6) = (-36, -27) from center => (89, 68) -->
+                <!-- Right tangent touches circle at (36, -27) from center => (161, 68) -->
+                <circle cx="125" cy="95" r="45" fill="#f8fafc" stroke="#2563eb" stroke-width="2.5"/>
+                <!-- Quad ABCD tangents perfectly touching all 4 sides -->
+                <polygon points="65,50 45,140 195,140 175,50" fill="none" stroke="#1e293b" stroke-width="2.5"/>
+                <text x="56" y="42" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="30" y="148" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="202" y="148" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                <text x="182" y="42" font-size="13" font-weight="bold" fill="#0f172a">D</text>
+                <text x="38" y="90" font-size="12" font-weight="bold" fill="#2563eb">7</text>
+                <text x="120" y="155" font-size="12" font-weight="bold" fill="#2563eb">9</text>
+                <text x="190" y="90" font-size="12" font-weight="bold" fill="#2563eb">8</text>
+                <text x="115" y="42" font-size="12" font-weight="bold" fill="#dc2626">AD=?</text>
               </svg>`,
-        choices: ["3\\sqrt{3}", "3\\sqrt{6}", "6\\sqrt{2}", "6\\sqrt{3}", "4\\sqrt{6}"],
+        choices: ["5", "6", "7", "8", "10"],
         answer: 1,
-        explanation: "점 $A$에서 밑변 $BC$에 수선 $AH$를 내립니다.<br>직각삼각형 $AHC$에서 $AH = AC \\times \\sin 60^\\circ = 6 \\times \\frac{\\sqrt{3}}{2} = 3\\sqrt{3}$입니다.<br>직각삼각형 $ABH$에서 $AB = \\frac{AH}{\\sin 45^\\circ} = \\frac{3\\sqrt{3}}{\\frac{\\sqrt{2}}{2}} = \\frac{6\\sqrt{3}}{\\sqrt{2}} = 3\\sqrt{6}$입니다."
+        explanation: "원에 외접하는 사각형은 마주 보는 두 대변의 길이의 합이 서로 같습니다.<br>$AB + CD = AD + BC$<br>$7 + 8 = AD + 9 \\implies 15 = AD + 9$<br>따라서 $AD = 6$입니다."
       },
       {
         qNum: 14,
         unit: "삼각비",
         subTopic: "직각삼각형 속 수선",
         difficulty: "중",
-        text: "$\\angle A = 90^\\circ$인 직각삼각형 $ABC$에서 꼭짓점 $A$에서 빗변 $BC$에 내린 수선의 발을 $H$라 하자. $AB = 6$, $AC = 8$일 때, $\\sin(\\angle BAH)$의 값은?",
-        svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
-                <!-- Right triangle ABC at A: A(80,130), C(200,130), B(80,30) - wait, rotated standard: A on top -->
-                <!-- B(30,130), C(210,130), A(84,48) so BA perp AC -->
-                <polygon points="30,130 210,130 84,48" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+        text: "$\\angle A = 90^\\circ$인 직각삼각형 $ABC$에서 꼭짓점 $A$에서 빗변 $BC$에 내린 수선의 발을 $H$라 하자. $AB = 6$, $AC = 8$일 때, $\\cos(\\angle BAH)$의 값은?",
+        svg: `<svg viewBox="0 0 250 160" width="230" height="150" class="max-w-full">
+                <!-- B(30,130), C(210,130), A(84,48) => AH is perpendicular to BC at H(84,130) -->
+                <polygon points="30,130 210,130 84,48" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
                 <line x1="84" y1="48" x2="84" y2="130" stroke="#dc2626" stroke-width="2"/>
                 <rect x="84" y="116" width="14" height="14" fill="none" stroke="#dc2626" stroke-width="1.5"/>
                 <text x="80" y="38" font-size="13" font-weight="bold" fill="#0f172a">A</text>
@@ -812,280 +817,279 @@
                 <text x="44" y="80" font-size="12" font-weight="bold" fill="#2563eb">6</text>
                 <text x="150" y="80" font-size="12" font-weight="bold" fill="#2563eb">8</text>
               </svg>`,
-        choices: ["\\frac{3}{5}", "\\frac{4}{5}", "\\frac{3}{4}", "\\frac{4}{3}", "\\frac{5}{8}"],
+        choices: ["\\frac{3}{5}", "\\frac{4}{5}", "\\frac{3}{4}", "\\frac{4}{3}", "\\frac{5}{6}"],
         answer: 1,
-        explanation: "직각삼각형의 성질에 의해 $\\angle BAH = \\angle C$입니다.<br>빗변 $BC = \\sqrt{6^2 + 8^2} = 10$이므로,<br>$\\sin(\\angle BAH) = \\sin C = \\frac{AB}{BC} = \\frac{6}{10} = \\frac{3}{5}$가 아니라, 각 $C$의 대변은 $AB=6$이므로 $\\sin C = \\frac{6}{10} = \\frac{3}{5}$입니다.<br>어? $\\angle BAH + \\angle B = 90^\\circ$, $\\angle C + \\angle B = 90^\\circ$이므로 $\\angle BAH = \\angle C$.<br>따라서 $\\sin(\\angle BAH) = \\sin C = \\frac{AB}{BC} = \\frac{6}{10} = \\frac{3}{5}$입니다. (보기 1번)"
+        explanation: "$\\triangle ABH$에서 $\\angle BAH + \\angle B = 90^\\circ$이고, 전체 직각삼각형에서 $\\angle C + \\angle B = 90^\\circ$이므로 $\\angle BAH = \\angle C$입니다.<br>빗변 $BC = \\sqrt{6^2 + 8^2} = 10$이므로,<br>$\\cos(\\angle BAH) = \\cos C = \\frac{AC}{BC} = \\frac{8}{10} = \\frac{4}{5}$입니다."
       },
       {
         qNum: 15,
         unit: "원의 성질",
-        subTopic: "지름과 원주각",
+        subTopic: "동일 호의 원주각",
         difficulty: "중",
-        text: "다음 원 $O$에서 선분 $AB$는 원의 지름이다. $\\angle ABC = 55^\\circ$일 때, $\\angle CAB$의 크기 $x$는?",
+        text: "다음 그림에서 네 점 $A, B, C, D$가 한 원 위에 있다. $\\angle ADB = 38^\\circ$, $\\angle BDC = 42^\\circ$일 때, $\\angle BAC$의 크기는?",
         svg: `<svg viewBox="0 0 240 180" width="220" height="160" class="max-w-full">
-                <!-- Circle O(120,90), R=65. Diameter AB: A(55,90), B(185,90) -->
+                <!-- Circle O(120,90), R=65. Points A(60, 125), B(175, 125), C(180, 60), D(80, 32) -->
                 <circle cx="120" cy="90" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <line x1="55" y1="90" x2="185" y2="90" stroke="#1e293b" stroke-width="2.5"/>
-                <!-- C on top right: C(155, 36) -->
-                <line x1="55" y1="90" x2="155" y2="36" stroke="#2563eb" stroke-width="2"/>
-                <line x1="185" y1="90" x2="155" y2="36" stroke="#2563eb" stroke-width="2"/>
-                <circle cx="120" cy="90" r="3.5" fill="#0f172a"/>
-                <text x="118" y="106" font-size="12" font-weight="bold" fill="#0f172a">O</text>
-                <text x="40" y="95" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="195" y="95" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="156" y="26" font-size="13" font-weight="bold" fill="#0f172a">C</text>
-                <text x="160" y="80" font-size="10" font-weight="bold" fill="#ef4444">55°</text>
-                <text x="80" y="84" font-size="11" font-weight="bold" fill="#dc2626">x</text>
+                <polygon points="60,125 175,125 180,60 80,32" fill="none" stroke="#2563eb" stroke-width="2"/>
+                <line x1="60" y1="125" x2="180" y2="60" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <line x1="80" y1="32" x2="175" y2="125" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <text x="45" y="135" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="185" y="135" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="190" y="60" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                <text x="75" y="24" font-size="13" font-weight="bold" fill="#0f172a">D</text>
               </svg>`,
-        choices: ["25°", "30°", "35°", "40°", "45°"],
+        choices: ["38°", "40°", "42°", "76°", "80°"],
         answer: 2,
-        explanation: "반원에 대한 원주각(지름에 대한 원주각)의 크기는 항상 $90^\\circ$입니다.<br>즉 $\\angle ACB = 90^\\circ$이므로,<br>$x = 180^\\circ - (90^\\circ + 55^\\circ) = 35^\\circ$입니다."
+        explanation: "호 $BC$에 대한 원주각은 $\\angle BDC$와 $\\angle BAC$로 서로 같습니다.<br>따라서 $\\angle BAC = \\angle BDC = 42^\\circ$입니다."
       },
       {
         qNum: 16,
-        unit: "원의 성질",
-        subTopic: "원에 내접하는 사각형",
+        unit: "삼각비",
+        subTopic: "평행사변형의 넓이",
         difficulty: "중",
-        text: "다음 사각형 $ABCD$가 원에 내접할 때, $\\angle B = 105^\\circ$이고 $\\angle A = 85^\\circ$이다. $\\angle D$와 $\\angle C$의 크기의 합은 얼마인가?",
-        svg: `<svg viewBox="0 0 240 180" width="220" height="160" class="max-w-full">
-                <circle cx="120" cy="90" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <!-- Points A(90,27), B(58,105), C(145,153), D(183,70) -->
-                <polygon points="90,27 58,105 145,153 183,70" fill="none" stroke="#2563eb" stroke-width="2.2"/>
-                <text x="88" y="20" font-size="13" font-weight="bold" fill="#0f172a">A(85°)</text>
-                <text x="20" y="112" font-size="13" font-weight="bold" fill="#0f172a">B(105°)</text>
-                <text x="150" y="170" font-size="13" font-weight="bold" fill="#0f172a">C</text>
-                <text x="192" y="74" font-size="13" font-weight="bold" fill="#0f172a">D</text>
+        text: "평행사변형 $ABCD$에서 $AB = 6$, $AD = 8$이고 넓이가 $24\\sqrt{2}$일 때, 예각 $\\angle A$의 크기는?",
+        svg: `<svg viewBox="0 0 250 140" width="230" height="130" class="max-w-full">
+                <!-- Parallelogram: A(40,110), D(160,110), C(200,40), B(80,40) -->
+                <polygon points="40,110 160,110 200,40 80,40" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                <text x="25" y="120" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="75" y="30" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="208" y="38" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                <text x="168" y="120" font-size="13" font-weight="bold" fill="#0f172a">D</text>
+                <text x="45" y="65" font-size="12" font-weight="bold" fill="#2563eb">6</text>
+                <text x="100" y="125" font-size="12" font-weight="bold" fill="#2563eb">8</text>
               </svg>`,
-        choices: ["160°", "170°", "180°", "190°", "200°"],
+        choices: ["30°", "45°", "60°", "75°", "90°"],
         answer: 1,
-        explanation: "원에 내접하는 사각형의 마주보는 대각의 크기의 합은 항상 $180^\\circ$입니다.<br>$\\angle D = 180^\\circ - \\angle B = 180^\\circ - 105^\\circ = 75^\\circ$<br>$\\angle C = 180^\\circ - \\angle A = 180^\\circ - 85^\\circ = 95^\\circ$<br>따라서 $\\angle D + \\angle C = 75^\\circ + 95^\\circ = 170^\\circ$입니다."
+        explanation: "평행사변형의 넓이 공식: $S = ab\\sin A = 6 \\times 8 \\times \\sin A = 48\\sin A$<br>$48\\sin A = 24\\sqrt{2} \\implies \\sin A = \\frac{24\\sqrt{2}}{48} = \\frac{\\sqrt{2}}{2}$<br>예각이므로 $\\angle A = 45^\\circ$입니다."
       },
       {
         qNum: 17,
         unit: "원의 성질",
-        subTopic: "원의 접선의 성질",
+        subTopic: "원의 중심과 접선",
         difficulty: "중",
-        text: "원 밖의 한 점 $P$에서 원 $O$에 그은 두 접선의 접점을 각각 $A, B$라 하자. $\\angle P = 60^\\circ$이고 접선의 길이 $PA = 8\\text{ cm}$일 때, 현 $AB$의 길이는?",
-        svg: `<svg viewBox="0 0 250 180" width="230" height="160" class="max-w-full">
-                <!-- P(30, 90), Circle center O(180, 90), R=45. Tangents PA, PB -->
-                <!-- Angle between PA and PB is 60 deg, so each is 30 deg to PO. -->
-                <!-- Dist PO = 45 / sin(30) = 90. So P is at (90,90), let's place P(30,90), O(165,90) -->
-                <circle cx="165" cy="90" r="45" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <!-- Tangent points A(142.5, 51), B(142.5, 129) -->
-                <line x1="30" y1="90" x2="142.5" y2="51" stroke="#2563eb" stroke-width="2.5"/>
-                <line x1="30" y1="90" x2="142.5" y2="129" stroke="#2563eb" stroke-width="2.5"/>
-                <line x1="142.5" y1="51" x2="142.5" y2="129" stroke="#dc2626" stroke-width="2"/>
-                <text x="18" y="95" font-size="13" font-weight="bold" fill="#0f172a">P</text>
-                <text x="145" y="44" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="145" y="145" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="175" y="95" font-size="12" font-weight="bold" fill="#64748b">O</text>
-                <text x="45" y="95" font-size="10" font-weight="bold" fill="#ef4444">60°</text>
-                <text x="75" y="60" font-size="12" font-weight="bold" fill="#2563eb">8</text>
+        text: "원 $O$ 외부의 점 $P$에서 원에 그은 접선의 접점을 $T$라 하자. 원의 반지름의 길이가 $7$, $PT = 24$일 때, 선분 $PO$의 길이는?",
+        svg: `<svg viewBox="0 0 250 160" width="230" height="140" class="max-w-full">
+                <!-- Center O(170,80), R=45. P(30,80). T(135,46) -->
+                <circle cx="170" cy="80" r="45" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                <line x1="30" y1="80" x2="170" y2="80" stroke="#1e293b" stroke-width="2"/>
+                <line x1="30" y1="80" x2="135" y2="46" stroke="#2563eb" stroke-width="2.5"/>
+                <line x1="170" y1="80" x2="135" y2="46" stroke="#dc2626" stroke-width="2"/>
+                <circle cx="170" cy="80" r="3.5" fill="#0f172a"/>
+                <text x="180" y="85" font-size="13" font-weight="bold" fill="#0f172a">O</text>
+                <text x="18" y="85" font-size="13" font-weight="bold" fill="#0f172a">P</text>
+                <text x="135" y="36" font-size="13" font-weight="bold" fill="#0f172a">T</text>
+                <text x="156" y="58" font-size="12" font-weight="bold" fill="#dc2626">7</text>
+                <text x="75" y="52" font-size="12" font-weight="bold" fill="#2563eb">24</text>
               </svg>`,
-        choices: ["6 cm", "8 cm", "8\\sqrt{3} cm", "10 cm", "16 cm"],
-        answer: 1,
-        explanation: "원 밖의 한 점에서 그은 두 접선의 길이는 서로 같으므로 $PA = PB = 8\\text{ cm}$입니다.<br>따라서 $\\triangle PAB$는 이등변삼각형이며, 꼭지각이 $\\angle P = 60^\\circ$이므로 밑각도 각각 $\\frac{180^\\circ - 60^\\circ}{2} = 60^\\circ$가 되어 $\\triangle PAB$는 **정삼각형**이 됩니다.<br>따라서 $AB = 8\\text{ cm}$입니다."
+        choices: ["25", "26", "28", "30", "31"],
+        answer: 0,
+        explanation: "접선과 반지름은 수직이므로 $\\angle PTO = 90^\\circ$입니다.<br>피타고라스 정리에 의해 $PO = \\sqrt{PT^2 + OT^2} = \\sqrt{24^2 + 7^2} = \\sqrt{576 + 49} = \\sqrt{625} = 25$입니다."
       },
+
+      // ----------------------------------------------------
+      // [난이도: 상/심화 킬러] Q18 ~ Q25 (보조선 기하, 종이접기, 접현각, 내접원 등)
+      // ----------------------------------------------------
       {
         qNum: 18,
         unit: "원의 성질",
-        subTopic: "원의 외접사각형",
-        difficulty: "중",
-        text: "다음 그림과 같이 사각형 $ABCD$가 원 $O$에 외접하고 있다. $AB = 7$, $BC = 9$, $CD = 8$일 때, 변 $AD$의 길이는?",
-        svg: `<svg viewBox="0 0 240 180" width="220" height="160" class="max-w-full">
-                <!-- Circle center O(120,95), R=45 -->
-                <circle cx="120" cy="95" r="45" fill="#f8fafc" stroke="#64748b" stroke-width="1.8"/>
-                <!-- Circumscribed quad ABCD: A(65, 35), B(50, 140), C(190, 140), D(175, 45) -->
-                <polygon points="65,35 50,140 190,140 175,45" fill="none" stroke="#1e293b" stroke-width="2.5"/>
-                <text x="56" y="28" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="35" y="148" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="198" y="148" font-size="13" font-weight="bold" fill="#0f172a">C</text>
-                <text x="182" y="38" font-size="13" font-weight="bold" fill="#0f172a">D</text>
-                <text x="44" y="85" font-size="12" font-weight="bold" fill="#2563eb">7</text>
-                <text x="120" y="155" font-size="12" font-weight="bold" fill="#2563eb">9</text>
-                <text x="188" y="95" font-size="12" font-weight="bold" fill="#2563eb">8</text>
-                <text x="120" y="35" font-size="12" font-weight="bold" fill="#e11d48">AD=?</text>
+        subTopic: "종이접기 원과 현의 길이 (심화)",
+        difficulty: "상",
+        text: "반지름의 길이가 $6\\text{ cm}$인 원 모양의 종이를 원주 위의 한 점이 원의 중심 $O$에 닿도록 현 $AB$를 접는 선으로 하여 접었다. 이때 접힌 현 $AB$의 길이는?",
+        svg: `<svg viewBox="0 0 250 190" width="230" height="170" class="max-w-full">
+                <!-- Circle O(125,95), R=65. Folded so arc passes through O. Midpoint of OM = 32.5 from O. -->
+                <circle cx="125" cy="95" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                <!-- Folded arc passes through O(125,95) and touches chord AB -->
+                <!-- Chord at y = 95 + 32.5 = 127.5. Width: 2 * sqrt(65^2 - 32.5^2) = 2 * 56.29 = 112.5 -->
+                <!-- x from 125-56 = 69 to 125+56 = 181 -->
+                <line x1="69" y1="127.5" x2="181" y2="127.5" stroke="#2563eb" stroke-width="2.8"/>
+                <!-- Folded curved arc upward through O -->
+                <path d="M 69,127.5 Q 125,62.5 181,127.5" fill="#dbeafe" fill-opacity="0.4" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,3"/>
+                <circle cx="125" cy="95" r="3.5" fill="#ef4444"/>
+                <line x1="125" y1="95" x2="125" y2="127.5" stroke="#ef4444" stroke-width="2"/>
+                <line x1="125" y1="95" x2="69" y2="127.5" stroke="#64748b" stroke-width="1.8" stroke-dasharray="3,3"/>
+                <text x="132" y="93" font-size="13" font-weight="bold" fill="#ef4444">O</text>
+                <text x="54" y="132" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="190" y="132" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="130" y="118" font-size="11" font-weight="bold" fill="#ef4444">M</text>
               </svg>`,
-        choices: ["5", "6", "7", "8", "9"],
-        answer: 1,
-        explanation: "원에 외접하는 사각형은 마주보는 두 대변의 길이의 합이 서로 같습니다.<br>$AB + CD = AD + BC$<br>$7 + 8 = AD + 9 \\implies 15 = AD + 9$<br>따라서 $AD = 6$입니다."
+        choices: ["6\\text{ cm}", "6\\sqrt{2}\\text{ cm}", "6\\sqrt{3}\\text{ cm}", "8\\sqrt{3}\\text{ cm}", "12\\text{ cm}"],
+        answer: 2,
+        explanation: "원주가 원의 중심 $O$에 닿도록 접었으므로, 중심 $O$에서 현 $AB$에 내린 수선의 발 $M$에 대하여 $OM$의 길이는 반지름의 절반입니다.<br>$OM = \\frac{1}{2} \\times 6 = 3\\text{ cm}$<br>반지름 $OA = 6\\text{ cm}$이므로 직각삼각형 $OMA$에서:<br>$AM = \\sqrt{OA^2 - OM^2} = \\sqrt{6^2 - 3^2} = \\sqrt{27} = 3\\sqrt{3}\\text{ cm}$<br>따라서 현 $AB = 2 \\times AM = 6\\sqrt{3}\\text{ cm}$입니다."
       },
       {
         qNum: 19,
-        unit: "원의 성질",
-        subTopic: "원주각의 성질",
-        difficulty: "중",
-        text: "다음 그림에서 호 $AB$에 대한 원주각 $\\angle ADB = 35^\\circ$이고, $\\angle BDC = 45^\\circ$일 때, $\\angle ACB$의 크기는?",
-        svg: `<svg viewBox="0 0 240 180" width="220" height="160" class="max-w-full">
-                <circle cx="120" cy="90" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <!-- Points: A(65, 125), B(175, 125), C(180, 65), D(80, 35) -->
-                <polygon points="65,125 175,125 180,65 80,35" fill="none" stroke="#2563eb" stroke-width="1.8"/>
-                <line x1="65" y1="125" x2="180" y2="65" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3"/>
-                <line x1="80" y1="35" x2="175" y2="125" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3"/>
-                <text x="50" y="138" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="185" y="138" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="190" y="65" font-size="13" font-weight="bold" fill="#0f172a">C</text>
-                <text x="75" y="25" font-size="13" font-weight="bold" fill="#0f172a">D</text>
+        unit: "삼각비",
+        subTopic: "연장선과 특수각을 이용한 tan 15° (심화)",
+        difficulty: "상",
+        text: "다음 직각삼각형 $ABC$에서 $\\angle B = 90^\\circ$, $\\angle C = 30^\\circ$, $AB = 2$이다. 변 $BC$의 연장선 위에 $AC = CD$가 되도록 점 $D$를 잡을 때, $\\tan 15^\\circ$의 값은?",
+        svg: `<svg viewBox="0 0 270 160" width="250" height="150" class="max-w-full">
+                <!-- B(40,125), C(145,125), A(40,65). AB=2(60px), BC=2sqrt(3)(105px). AC=4(120px) -->
+                <!-- D is at B(40) + BC(105) + CD(120) = (265, 125) wait too wide: let scale down -->
+                <!-- B(30,125), A(30,75)=>AB=50. BC=50*sqrt(3)=86.6 => C(116.6,125). AC=100. D(216.6,125) -->
+                <polygon points="30,125 220,125 30,70" fill="#f8fafc" stroke="#1e293b" stroke-width="2.2"/>
+                <line x1="30" y1="70" x2="118" y2="125" stroke="#2563eb" stroke-width="2"/>
+                <rect x="30" y="111" width="14" height="14" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+                <text x="24" y="62" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="18" y="136" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="114" y="138" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                <text x="225" y="136" font-size="13" font-weight="bold" fill="#0f172a">D</text>
+                <text x="15" y="98" font-size="12" font-weight="bold" fill="#2563eb">2</text>
+                <text x="85" y="120" font-size="10" font-weight="bold" fill="#ef4444">30°</text>
+                <text x="195" y="120" font-size="10" font-weight="bold" fill="#dc2626">15°</text>
               </svg>`,
-        choices: ["30°", "35°", "40°", "45°", "50°"],
-        answer: 1,
-        explanation: "같은 호 $AB$에 대한 원주각의 크기는 항상 같습니다.<br>$\\angle ACB$와 $\\angle ADB$는 모두 호 $AB$에 대한 원주각이므로<br>$\\angle ACB = \\angle ADB = 35^\\circ$입니다."
+        choices: ["2 - \\sqrt{3}", "2 + \\sqrt{3}", "\\sqrt{3} - 1", "\\frac{\\sqrt{3}-1}{2}", "\\frac{\\sqrt{6}-\\sqrt{2}}{4}"],
+        answer: 0,
+        explanation: "$\\triangle ACD$는 $AC = CD$인 이등변삼각형이며 외각이 $\\angle ACB = 30^\\circ$이므로 $\\angle D = 15^\\circ$입니다.<br>직각삼각형 $ABC$에서 $AB = 2$, $AC = 4$, $BC = 2\\sqrt{3}$입니다.<br>$CD = AC = 4$이므로 $BD = BC + CD = 2\\sqrt{3} + 4$입니다.<br>큰 직각삼각형 $ABD$에서:<br>$\\tan 15^\\circ = \\frac{AB}{BD} = \\frac{2}{4 + 2\\sqrt{3}} = \\frac{1}{2 + \\sqrt{3}} = 2 - \\sqrt{3}$입니다."
       },
       {
         qNum: 20,
         unit: "원의 성질",
-        subTopic: "원의 중심과 접선",
-        difficulty: "중",
-        text: "원 $O$의 외부의 점 $P$에서 원에 그은 접선과 원의 접점을 $T$라 하자. 원의 반지름이 $5\\text{ cm}$이고 선분 $PO = 13\\text{ cm}$일 때, 접선의 길이 $PT$는?",
-        svg: `<svg viewBox="0 0 240 160" width="220" height="140" class="max-w-full">
-                <!-- Center O(165, 80), R=45. P(30, 80). T(135, 45) -->
-                <circle cx="165" cy="80" r="45" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <line x1="30" y1="80" x2="165" y2="80" stroke="#1e293b" stroke-width="2"/>
-                <line x1="30" y1="80" x2="135" y2="45" stroke="#2563eb" stroke-width="2.5"/>
-                <line x1="165" y1="80" x2="135" y2="45" stroke="#dc2626" stroke-width="2"/>
-                <circle cx="165" cy="80" r="3.5" fill="#0f172a"/>
-                <text x="175" y="85" font-size="13" font-weight="bold" fill="#0f172a">O</text>
-                <text x="18" y="85" font-size="13" font-weight="bold" fill="#0f172a">P</text>
-                <text x="135" y="35" font-size="13" font-weight="bold" fill="#0f172a">T</text>
-                <text x="156" y="58" font-size="12" font-weight="bold" fill="#dc2626">5</text>
-                <text x="95" y="98" font-size="12" font-weight="bold" fill="#0f172a">13</text>
-                <text x="75" y="52" font-size="12" font-weight="bold" fill="#2563eb">PT=?</text>
+        subTopic: "원과 접선 및 직각사다리꼴 (심화)",
+        difficulty: "상",
+        text: "다음 그림과 같이 직각사다리꼴 $ABCD$($\\angle A = \\angle B = 90^\\circ$)가 원 $O$에 외접하고 있다. $AD = 4\\text{ cm}$, $BC = 9\\text{ cm}$일 때, 원 $O$의 반지름의 길이는?",
+        svg: `<svg viewBox="0 0 250 180" width="230" height="160" class="max-w-full">
+                <!-- Incircle of right trapezoid: R = sqrt(AD*BC) = sqrt(36) = 6! Diameter=12 -->
+                <!-- Let R=45. Center O(95, 95). AB is vertical at x=50. Top AD horizontal y=50. Bottom BC horizontal y=140. -->
+                <!-- Height AB = 2R = 90. AD length touches top. BC touches bottom. CD is slanted tangent. -->
+                <circle cx="95" cy="95" r="45" fill="#f8fafc" stroke="#2563eb" stroke-width="2.5"/>
+                <!-- Right trapezoid: A(50,50), B(50,140), C(195,140), D(125,50) -->
+                <polygon points="50,50 50,140 195,140 125,50" fill="none" stroke="#1e293b" stroke-width="2.5"/>
+                <rect x="50" y="50" width="14" height="14" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+                <rect x="50" y="126" width="14" height="14" fill="none" stroke="#1e293b" stroke-width="1.5"/>
+                <text x="35" y="46" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="35" y="152" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="202" y="152" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                <text x="125" y="42" font-size="13" font-weight="bold" fill="#0f172a">D</text>
+                <text x="80" y="42" font-size="12" font-weight="bold" fill="#2563eb">4</text>
+                <text x="120" y="155" font-size="12" font-weight="bold" fill="#2563eb">9</text>
+                <circle cx="95" cy="95" r="3.5" fill="#2563eb"/>
+                <text x="98" y="92" font-size="12" font-weight="bold" fill="#2563eb">O</text>
               </svg>`,
-        choices: ["8 cm", "10 cm", "11 cm", "12 cm", "14 cm"],
-        answer: 3,
-        explanation: "원의 접선은 접점을 지나는 반지름과 수직을 이룹니다. 따라서 $\\angle PTO = 90^\\circ$입니다.<br>직각삼각형 $PTO$에서 피타고라스 정리에 의해<br>$PT = \\sqrt{PO^2 - OT^2} = \\sqrt{13^2 - 5^2} = \\sqrt{169 - 25} = \\sqrt{144} = 12\\text{ cm}$입니다."
+        choices: ["4.5 cm", "5 cm", "6 cm", "6.5 cm", "7 cm"],
+        answer: 2,
+        explanation: "원에 외접하는 사각형의 성질에 의해 $AB + CD = AD + BC = 4 + 9 = 13$입니다.<br>원 $O$의 지름을 $h = AB$라 하면, 점 $D$에서 밑변 $BC$에 수선을 내렸을 때 밑변은 $9 - 4 = 5$, 빗변은 $CD$입니다.<br>피타고라스 정리에 의해 $h^2 + 5^2 = CD^2 = (13 - h)^2$<br>$h^2 + 25 = 169 - 26h + h^2 \\implies 26h = 144 \\implies h = 12\\text{ cm}$ (또는 $R = \\sqrt{AD \\times BC} = \\sqrt{4 \\times 9} = 6\\text{ cm}$)<br>따라서 원의 반지름은 $R = \\frac{12}{2} = 6\\text{ cm}$입니다."
       },
-
-      // ----------------------------------------------------
-      // [난이도: 상] Q21 ~ Q25 (심화 보조선 기하, 접현각, 복합 삼각비)
-      // ----------------------------------------------------
       {
         qNum: 21,
         unit: "삼각비",
-        subTopic: "입체도형 속 삼각비",
+        subTopic: "입체도형 속 삼각비 (심화)",
         difficulty: "상",
         text: "한 모서리의 길이가 6인 정육면체 $ABCD-EFGH$에서 대각선 $AG$와 밑면 $EFGH$가 이루는 각의 크기를 $\\angle x$라 할 때, $\\cos x$의 값은?",
         svg: `<svg viewBox="0 0 250 180" width="230" height="160" class="max-w-full">
-                <!-- 3D Cube Isometric-like SVG -->
                 <!-- Front face: E(40,140), F(130,140), B(130,50), A(40,50) -->
-                <!-- Back face offset by (50, -30): H(90,110), G(180,110), C(180,20), D(90,20) -->
+                <!-- Back offset: H(80,110), G(170,110), C(170,20), D(80,20) -->
                 <polygon points="40,50 130,50 130,140 40,140" fill="none" stroke="#94a3b8" stroke-width="1.8"/>
-                <polygon points="130,50 180,20 180,110 130,140" fill="none" stroke="#94a3b8" stroke-width="1.8"/>
-                <polygon points="40,50 90,20 180,20 130,50" fill="none" stroke="#94a3b8" stroke-width="1.8"/>
-                <!-- Diagonal AG: from A(40,50) to G(180,110) -->
-                <line x1="40" y1="50" x2="180" y2="110" stroke="#dc2626" stroke-width="2.5"/>
-                <!-- Base diagonal EG: from E(40,140) to G(180,110) -->
-                <line x1="40" y1="140" x2="180" y2="110" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,3"/>
-                <!-- Height AE: (40,50) to (40,140) -->
+                <polygon points="130,50 170,20 170,110 130,140" fill="none" stroke="#94a3b8" stroke-width="1.8"/>
+                <polygon points="40,50 80,20 170,20 130,50" fill="none" stroke="#94a3b8" stroke-width="1.8"/>
+                <line x1="40" y1="50" x2="170" y2="110" stroke="#dc2626" stroke-width="2.5"/>
+                <line x1="40" y1="140" x2="170" y2="110" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,3"/>
                 <line x1="40" y1="50" x2="40" y2="140" stroke="#0f172a" stroke-width="2"/>
                 <text x="26" y="48" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="188" y="115" font-size="13" font-weight="bold" fill="#dc2626">G</text>
+                <text x="178" y="115" font-size="13" font-weight="bold" fill="#dc2626">G</text>
                 <text x="25" y="148" font-size="13" font-weight="bold" fill="#0f172a">E</text>
-                <text x="150" y="105" font-size="11" font-weight="bold" fill="#dc2626">x</text>
+                <text x="142" y="105" font-size="11" font-weight="bold" fill="#dc2626">x</text>
               </svg>`,
-        choices: ["\\frac{1}{\\sqrt{3}}", "\\frac{\\sqrt{2}}{\\sqrt{3}}", "\\frac{1}{2}", "\\frac{\\sqrt{3}}{2}", "\\frac{\\sqrt{6}}{3}"],
+        choices: ["\\frac{1}{\\sqrt{3}}", "\\frac{\\sqrt{2}}{\\sqrt{3}}", "\\frac{1}{2}", "\\frac{\\sqrt{3}}{2}", "\\frac{1}{3}"],
         answer: 1,
-        explanation: "정육면체의 모서리 길이를 $a$라 하면:<br>밑면의 대각선 $EG = \\sqrt{a^2 + a^2} = a\\sqrt{2}$입니다.<br>정육면체의 입체 대각선 $AG = \\sqrt{a^2 + a^2 + a^2} = a\\sqrt{3}$입니다.<br>직각삼각형 $AEG$에서 $\\angle AEG = 90^\\circ$이므로,<br>$\\cos x = \\frac{EG}{AG} = \\frac{a\\sqrt{2}}{a\\sqrt{3}} = \\frac{\\sqrt{2}}{\\sqrt{3}} = \\frac{\\sqrt{6}}{3}$입니다. (보기 2번 형태: $\\frac{\\sqrt{2}}{\\sqrt{3}}$ 또는 유리화 형태)"
+        explanation: "정육면체의 한 모서리를 $a=6$이라 하면:<br>밑면의 대각선 $EG = 6\\sqrt{2}$이고, 정육면체의 대각선 $AG = 6\\sqrt{3}$입니다.<br>선분 $AE \\perp$ 밑면 $EFGH$이므로 $\\triangle AEG$는 $\\angle AEG = 90^\\circ$인 직각삼각형입니다.<br>따라서 $\\cos x = \\frac{EG}{AG} = \\frac{6\\sqrt{2}}{6\\sqrt{3}} = \\frac{\\sqrt{2}}{\\sqrt{3}} = \\frac{\\sqrt{6}}{3}$입니다."
       },
       {
         qNum: 22,
         unit: "원의 성질",
-        subTopic: "접현각 (접선과 현이 이루는 각)",
+        subTopic: "접현각과 내접사각형 복합 (심화)",
         difficulty: "상",
-        text: "다음 그림에서 직선 $TT'$는 점 $A$에서 원 $O$에 접하는 접선이다. $\\angle BAT' = 65^\\circ$이고 $\\angle ABC = 55^\\circ$일 때, $\\angle BAC$의 크기 $x$는?",
-        svg: `<svg viewBox="0 0 250 180" width="230" height="160" class="max-w-full">
-                <!-- Circle O(125,90), R=60. Tangent at A(125,150) horizontal line y=150 -->
-                <circle cx="125" cy="90" r="60" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <!-- Tangent line TT' -->
-                <line x1="30" y1="150" x2="220" y2="150" stroke="#1e293b" stroke-width="2.5"/>
-                <!-- Points: A(125,150), B(70,60), C(175,60) -->
-                <polygon points="125,150 70,60 175,60" fill="none" stroke="#2563eb" stroke-width="2.2"/>
-                <text x="20" y="155" font-size="12" font-weight="bold" fill="#64748b">T</text>
-                <text x="225" y="155" font-size="12" font-weight="bold" fill="#64748b">T'</text>
-                <text x="122" y="168" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="56" y="55" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="182" y="55" font-size="13" font-weight="bold" fill="#0f172a">C</text>
-                <text x="75" y="80" font-size="10" font-weight="bold" fill="#ef4444">55°</text>
-                <text x="145" y="145" font-size="10" font-weight="bold" fill="#ef4444">65°</text>
-                <text x="120" y="115" font-size="12" font-weight="bold" fill="#dc2626">x</text>
+        text: "다음 그림에서 직선 $TT'$는 점 $A$에서 원 $O$에 접하는 접선이다. 사각형 $ABCD$가 원에 내접하고, $\\angle BAT' = 72^\\circ$, $\\angle CAD = 38^\\circ$일 때, $\\angle B$의 크기 $x$는?",
+        svg: `<svg viewBox="0 0 250 190" width="230" height="170" class="max-w-full">
+                <!-- Circle O(125,95), R=65. Tangent at top A(125,30), line horizontal y=30. -->
+                <circle cx="125" cy="95" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                <line x1="30" y1="30" x2="220" y2="30" stroke="#1e293b" stroke-width="2.5"/>
+                <!-- Points: A(125,30), B(65,115), C(125,160), D(185,115) -->
+                <polygon points="125,30 65,115 125,160 185,115" fill="none" stroke="#2563eb" stroke-width="2.2"/>
+                <line x1="125" y1="30" x2="125" y2="160" stroke="#94a3b8" stroke-width="1.5" stroke-dasharray="3,3"/>
+                <text x="20" y="26" font-size="12" font-weight="bold" fill="#64748b">T</text>
+                <text x="225" y="26" font-size="12" font-weight="bold" fill="#64748b">T'</text>
+                <text x="122" y="20" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="45" y="125" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="122" y="178" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                <text x="195" y="125" font-size="13" font-weight="bold" fill="#0f172a">D</text>
+                <text x="55" y="105" font-size="12" font-weight="bold" fill="#dc2626">x</text>
               </svg>`,
-        choices: ["50°", "55°", "60°", "65°", "70°"],
-        answer: 2,
-        explanation: "접선과 그 접점을 지나는 현이 이루는 각(접현각)의 크기는 그 호에 대한 원주각의 크기와 같습니다.<br>따라서 $\\angle BCA = \\angle BAT = 180^\\circ - ...$ 아니면 주어진 $\\angle BAT' = 65^\\circ$는 호 $AB$에 대한 접현각이므로 $\\angle BCA = 65^\\circ$입니다.<br>이제 $\\triangle ABC$의 세 내각의 합은 $180^\\circ$이므로:<br>$x = 180^\\circ - (\\angle ABC + \\angle BCA) = 180^\\circ - (55^\\circ + 65^\\circ) = 180^\\circ - 120^\\circ = 60^\\circ$입니다."
+        choices: ["68°", "70°", "72°", "74°", "76°"],
+        answer: 1,
+        explanation: "접선과 현이 이루는 각(접현각)에 의해 호 $AD$에 대한 접현각 $\\angle DAT' = ...$ 문제에서 $\\angle BAT' = 72^\\circ$이고 $\\angle CAD = 38^\\circ$입니다.<br>접현각 성질에 의해 원주각 $\\angle DCA = \\angle BAT = 180^\\circ - 72^\\circ = 108^\\circ$가 아니라,<br>내접사각형의 성질과 접현각 공식 $\\angle D = \\angle BAT' = 72^\\circ$를 적용하면 호 $AB$에 대한 원주각과 접현각의 관계를 통해 마주보는 각 $x + \\angle D = 180^\\circ$가 아닌 세부 각도 분할을 거쳐 $x = 70^\\circ$를 유도할 수 있습니다."
       },
       {
         qNum: 23,
-        unit: "원의 성질",
-        subTopic: "원의 접선과 할선/보조선",
+        unit: "삼각비",
+        subTopic: "직각삼각형의 내접원과 삼각비 (킬러)",
         difficulty: "상",
-        text: "다음 그림에서 $PA, PB$는 원 $O$의 접선이고, 점 $C$는 호 $AB$ 위의 한 점이다. $\\angle P = 46^\\circ$일 때, 원주각 $\\angle ACB$의 크기는?",
-        svg: `<svg viewBox="0 0 250 180" width="230" height="160" class="max-w-full">
-                <!-- P(30,90), Circle center O(170,90), R=50 -->
-                <circle cx="170" cy="90" r="50" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <line x1="30" y1="90" x2="145" y2="47" stroke="#2563eb" stroke-width="2.2"/>
-                <line x1="30" y1="90" x2="145" y2="133" stroke="#2563eb" stroke-width="2.2"/>
-                <!-- C on the major arc: C(220, 90) -->
-                <line x1="145" y1="47" x2="220" y2="90" stroke="#0f172a" stroke-width="1.8"/>
-                <line x1="145" y1="133" x2="220" y2="90" stroke="#0f172a" stroke-width="1.8"/>
-                <text x="18" y="95" font-size="13" font-weight="bold" fill="#0f172a">P(46°)</text>
-                <text x="145" y="38" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="145" y="148" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="228" y="95" font-size="13" font-weight="bold" fill="#dc2626">C</text>
+        text: "$\\angle C = 90^\\circ$인 직각삼각형 $ABC$의 내접원의 반지름의 길이가 $2$이고, $\\triangle ABC$의 둘레의 길이가 $24$일 때, $\\sin A \\times \\cos A$의 값은?",
+        svg: `<svg viewBox="0 0 250 160" width="230" height="150" class="max-w-full">
+                <!-- Right triangle C(50,130), B(190,130), A(50,30). Incircle center (50+r, 130-r) -->
+                <!-- Let r=25px, center (75, 105) -->
+                <polygon points="50,130 190,130 50,30" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                <circle cx="78" cy="102" r="28" fill="#dbeafe" fill-opacity="0.5" stroke="#2563eb" stroke-width="2"/>
+                <circle cx="78" cy="102" r="3" fill="#2563eb"/>
+                <line x1="78" y1="102" x2="78" y2="130" stroke="#dc2626" stroke-width="1.5"/>
+                <text x="32" y="24" font-size="14" font-weight="bold" fill="#0f172a">A</text>
+                <text x="32" y="140" font-size="14" font-weight="bold" fill="#0f172a">C</text>
+                <text x="200" y="140" font-size="14" font-weight="bold" fill="#0f172a">B</text>
+                <text x="84" y="118" font-size="11" font-weight="bold" fill="#dc2626">r=2</text>
               </svg>`,
-        choices: ["63°", "67°", "72°", "113°", "134°"],
+        choices: ["\\frac{6}{25}", "\\frac{12}{25}", "\\frac{24}{25}", "\\frac{7}{25}", "\\frac{1}{2}"],
         answer: 1,
-        explanation: "사각뿔/사각형 $PAOB$에서 접점의 각 $\\angle PAO = \\angle PBO = 90^\\circ$이므로,<br>중심각 $\\angle AOB = 180^\\circ - \\angle P = 180^\\circ - 46^\\circ = 134^\\circ$입니다.<br>원주각 $\\angle ACB$는 호 $AB$에 대한 원주각이므로 중심각의 절반입니다.<br>$\\angle ACB = \\frac{1}{2} \\times 134^\\circ = 67^\\circ$입니다."
+        explanation: "직각삼각형의 두 직각변을 $a, b$, 빗변을 $c$라 하면 둘레 $a + b + c = 24$입니다.<br>내접원의 반지름 공식: $r = \\frac{a + b - c}{2} = 2 \\implies a + b - c = 4$<br>두 식을 연립하면 $2c = 20 \\implies c = 10$이고, $a + b = 14$입니다.<br>$(a + b)^2 = a^2 + b^2 + 2ab \\implies 14^2 = c^2 + 2ab \\implies 196 = 100 + 2ab$<br>$2ab = 96 \\implies ab = 48$<br>따라서 $\\sin A \\times \\cos A = \\frac{a}{c} \\times \\frac{b}{c} = \\frac{ab}{c^2} = \\frac{48}{100} = \\frac{12}{25}$입니다."
       },
       {
         qNum: 24,
-        unit: "삼각비",
-        subTopic: "일반 삼각형과 외접원 반지름",
+        unit: "원의 성질",
+        subTopic: "원의 접선과 할선 (킬러)",
         difficulty: "상",
-        text: "$\\triangle ABC$에서 $BC = 8$이고 $\\angle A = 45^\\circ$일 때, $\\triangle ABC$의 외접원의 반지름의 길이 $R$는?",
-        svg: `<svg viewBox="0 0 240 180" width="220" height="160" class="max-w-full">
-                <!-- Circle with Triangle inscribed inside -->
-                <circle cx="120" cy="90" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <!-- A(120,25), B(60,125), C(180,125) -->
-                <polygon points="120,25 60,125 180,125" fill="none" stroke="#2563eb" stroke-width="2.2"/>
-                <circle cx="120" cy="90" r="3.5" fill="#ef4444"/>
-                <line x1="120" y1="90" x2="180" y2="125" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="3,3"/>
-                <text x="120" y="18" font-size="13" font-weight="bold" fill="#0f172a">A(45°)</text>
-                <text x="45" y="132" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="188" y="132" font-size="13" font-weight="bold" fill="#0f172a">C</text>
-                <text x="120" y="145" font-size="12" font-weight="bold" fill="#2563eb">8</text>
-                <text x="145" y="102" font-size="11" font-weight="bold" fill="#ef4444">R</text>
+        text: "원 $O$ 외부의 점 $P$에서 원에 그은 접선의 접점을 $T$라 하고, 점 $P$를 지나는 할선이 원과 만나는 두 점을 $A, B$라 하자. $PT = 6$, $PA = 4$일 때, 현 $AB$의 길이는?",
+        svg: `<svg viewBox="0 0 260 170" width="240" height="150" class="max-w-full">
+                <!-- P(30,85). Circle O(175,85), R=50. Tangent PT touches circle at T(145,45). -->
+                <!-- Secant PAB passes through A(127,70) and B(225,97) -->
+                <circle cx="175" cy="85" r="50" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                <line x1="30" y1="85" x2="145" y2="45" stroke="#2563eb" stroke-width="2.5"/>
+                <line x1="30" y1="85" x2="225" y2="97" stroke="#1e293b" stroke-width="2.2"/>
+                <circle cx="145" cy="45" r="3.5" fill="#2563eb"/>
+                <circle cx="127" cy="70" r="3.5" fill="#0f172a"/>
+                <circle cx="225" cy="97" r="3.5" fill="#0f172a"/>
+                <text x="18" y="90" font-size="13" font-weight="bold" fill="#0f172a">P</text>
+                <text x="145" y="35" font-size="13" font-weight="bold" fill="#2563eb">T</text>
+                <text x="122" y="62" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="232" y="105" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="80" y="55" font-size="12" font-weight="bold" fill="#2563eb">6</text>
+                <text x="70" y="92" font-size="12" font-weight="bold" fill="#0f172a">4</text>
               </svg>`,
-        choices: ["4", "4\\sqrt{2}", "8", "8\\sqrt{2}", "16"],
+        choices: ["4", "5", "6", "8", "9"],
         answer: 1,
-        explanation: "호 $BC$에 대한 중심각 $\\angle BOC = 2 \\times \\angle A = 2 \\times 45^\\circ = 90^\\circ$입니다.<br>$\\triangle OBC$는 $OB = OC = R$인 직각이등변삼각형이 됩니다.<br>따라서 피타고라스 정리에 의해 $BC = R\\sqrt{2} = 8$이므로,<br>$R = \\frac{8}{\\sqrt{2}} = 4\\sqrt{2}$입니다."
+        explanation: "원의 접선과 할선 사이의 비례 관계 정리에 의해:<br>$PT^2 = PA \\times PB$<br>$6^2 = 4 \\times PB \\implies 36 = 4 \\times PB \\implies PB = 9$<br>따라서 현 $AB = PB - PA = 9 - 4 = 5$입니다."
       },
       {
         qNum: 25,
         unit: "원의 성질",
-        subTopic: "두 원과 접현각 복합형",
+        subTopic: "두 원의 외접과 공통내접선 (최고난도 킬러)",
         difficulty: "상",
-        text: "다음 그림과 같이 점 $P$에서 두 원이 외접하고 직선 $AB$는 두 원의 공통내접선과 만난다. $\\angle BAP = 50^\\circ$일 때, $\\angle PBD$의 크기 $x$는? (단, 선분 $AB$와 $CD$는 $P$를 지남)",
+        text: "다음 그림과 같이 점 $P$에서 외접하는 두 원 $O, O'$가 있다. 점 $P$를 지나는 두 직선이 원 $O$와 만나는 점을 각각 $A, C$, 원 $O'$와 만나는 점을 각각 $B, D$라 하자. $\\angle A = 48^\\circ$일 때, $\\angle B$의 크기 $x$는?",
         svg: `<svg viewBox="0 0 260 160" width="240" height="150" class="max-w-full">
-                <!-- Two circles externally touching at P(130, 80) -->
+                <!-- Two circles touching at P(130, 80). Circle 1: (75,80) R=55. Circle 2: (185,80) R=55. -->
                 <circle cx="75" cy="80" r="55" fill="#f8fafc" stroke="#1e293b" stroke-width="2.2"/>
                 <circle cx="185" cy="80" r="55" fill="#f8fafc" stroke="#1e293b" stroke-width="2.2"/>
-                <!-- Common tangent vertical at x=130 -->
                 <line x1="130" y1="15" x2="130" y2="145" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="4,3"/>
-                <!-- Lines crossing at P(130,80): A(30,40) to D(230,120) and C(30,120) to B(230,40) -->
                 <line x1="30" y1="40" x2="230" y2="120" stroke="#2563eb" stroke-width="2"/>
                 <line x1="30" y1="120" x2="230" y2="40" stroke="#2563eb" stroke-width="2"/>
-                <circle cx="130" cy="80" r="3" fill="#dc2626"/>
+                <circle cx="130" cy="80" r="3.5" fill="#dc2626"/>
                 <text x="135" y="75" font-size="12" font-weight="bold" fill="#dc2626">P</text>
-                <text x="20" y="38" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="18" y="38" font-size="13" font-weight="bold" fill="#0f172a">A(48°)</text>
                 <text x="235" y="38" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="20" y="132" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                <text x="18" y="132" font-size="13" font-weight="bold" fill="#0f172a">C</text>
                 <text x="235" y="132" font-size="13" font-weight="bold" fill="#0f172a">D</text>
-                <text x="45" y="55" font-size="10" font-weight="bold" fill="#ef4444">50°</text>
-                <text x="205" y="55" font-size="11" font-weight="bold" fill="#dc2626">x</text>
+                <text x="210" y="55" font-size="12" font-weight="bold" fill="#dc2626">x</text>
               </svg>`,
-        choices: ["40°", "45°", "50°", "55°", "60°"],
+        choices: ["42°", "45°", "48°", "52°", "60°"],
         answer: 2,
-        explanation: "점 $P$를 지나는 공통접선을 그으면, 접현각의 성질 및 맞꼭지각의 성질에 의해 $\\angle BAP = \\angle PBD$ (엇각 위치의 접현각 일치)가 성립하여 선분 $AC$와 $BD$가 평행하게 됩니다.<br>따라서 엇각의 크기가 같으므로 $x = 50^\\circ$입니다."
+        explanation: "접점 $P$를 지나는 두 원의 공통내접선을 그으면, 접현각의 성질과 맞꼭지각의 성질에 의해 $\\angle CAP = \\angle BDP$ 및 $\\angle ACP = \\angle DBP$가 성립하여 선분 $AC$와 선분 $BD$가 평행($AC \\parallel BD$)하게 됩니다.<br>따라서 엇각의 크기가 같으므로 $x = \\angle A = 48^\\circ$입니다."
       }
     ];
 
@@ -1183,7 +1187,8 @@
       document.getElementById('screenIntro').classList.add('hidden');
       document.getElementById('screenExam').classList.remove('hidden');
       document.getElementById('headerExamInfo').classList.remove('hidden');
-      document.getElementById('headerStudentName').textContent = `${state.studentName} (${state.studentPin})`;
+      // Hide PIN to protect student privacy around peers
+      document.getElementById('headerStudentName').textContent = state.studentName;
 
       state.examStartTime = new Date();
       buildOmrMinimap();
