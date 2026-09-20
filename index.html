@@ -426,7 +426,7 @@
     let roundsChartInstance = null;
     let radarChartInstance = null;
 
-    // 안전한 KaTeX 수식 렌더링 함수 (미정의 에러 방지)
+    // 안전한 KaTeX 수식 렌더링 함수
     function renderKatex() {
       if (window.renderMathInElement) {
         try {
@@ -473,7 +473,717 @@
     }
 
     /* ==========================================================================
-       2. 천재교육 교과서 공식 연계 문항 풀 (TEXTBOOK_QUESTION_POOL)
+       2. 25개 고유 기하 슬롯 매트릭스 & 직전 회차 회피 엔진 (25-Slot Matrix)
+       - 슬롯마다 3~4개의 교과서 원본 및 파라메트릭 동적 변형 엔진 탑재
+       - 직전 회차에서 출제된 문제 ID를 기억하여 다음 회차에서는 새로운 문제를 최우선 배정
+       ========================================================================== */
+    const SLOT_GENERATORS = [
+      // [슬롯 01] 직각삼각형 삼각비 정의
+      () => {
+        const triples = [
+          { a: 7, b: 24, c: 25, ask: "\\cos A + \\sin B", val: "\\frac{48}{25}", wrg: ["\\frac{24}{25}", "\\frac{31}{25}", "\\frac{7}{25}", "\\frac{14}{25}"] },
+          { a: 5, b: 12, c: 13, ask: "\\sin A + \\cos A", val: "\\frac{17}{13}", wrg: ["\\frac{12}{13}", "\\frac{7}{13}", "\\frac{19}{13}", "\\frac{5}{12}"] },
+          { a: 3, b: 4, c: 5, ask: "\\tan A \\times \\cos A", val: "\\frac{3}{5}", wrg: ["\\frac{4}{5}", "\\frac{3}{4}", "\\frac{12}{25}", "\\frac{5}{3}"] },
+          { a: 8, b: 15, c: 17, ask: "\\cos A - \\sin A", val: "\\frac{7}{17}", wrg: ["\\frac{23}{17}", "\\frac{8}{17}", "\\frac{15}{17}", "\\frac{1}{17}"] }
+        ];
+        const t = pickRandom(triples);
+        return {
+          id: `SLOT01_${t.c}_${t.a}`,
+          unit: "삼각비",
+          subTopic: "삼각비의 기본 정의",
+          difficulty: "하",
+          text: `직각삼각형 $ABC$에서 $\\angle C = 90^\\circ$, $AB = ${t.c}$, $AC = ${t.b}$, $BC = ${t.a}$일 때, $${t.ask}$의 값은?`,
+          svg: `<svg viewBox="0 0 240 150" width="220" height="140" class="max-w-full">
+                  <polygon points="40,120 180,120 180,30" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                  <rect x="164" y="104" width="16" height="16" fill="none" stroke="#1e293b" stroke-width="1.8"/>
+                  <text x="30" y="130" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                  <text x="188" y="130" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                  <text x="188" y="26" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                  <text x="100" y="65" font-size="12" font-weight="bold" fill="#2563eb">${t.c}</text>
+                  <text x="108" y="136" font-size="12" font-weight="bold" fill="#2563eb">${t.b}</text>
+                  <text x="190" y="80" font-size="12" font-weight="bold" fill="#2563eb">${t.a}</text>
+                </svg>`,
+          choices: [t.val, ...t.wrg],
+          answer: 0,
+          explanation: `정의에 따라 각 삼각비를 구하여 대입하면 정답은 $${t.val}$입니다.`
+        };
+      },
+
+      // [슬롯 02] 특수각 30, 45, 60의 사칙연산
+      () => {
+        const ops = [
+          { expr: "(\\sin 45^\\circ + \\cos 45^\\circ) \\times \\tan 45^\\circ", ans: "\\sqrt{2}", wrg: ["\\frac{\\sqrt{2}}{2}", "1", "2\\sqrt{2}", "\\frac{1}{2}"] },
+          { expr: "\\cos 30^\\circ \\times \\tan 60^\\circ \\div \\sin 30^\\circ", ans: "3", wrg: ["\\frac{3}{2}", "2", "\\sqrt{3}", "\\frac{\\sqrt{3}}{2}"] },
+          { expr: "(\\sin 30^\\circ + \\cos 30^\\circ)(\\cos 60^\\circ - \\sin 60^\\circ)", ans: "-\\frac{1}{2}", wrg: ["\\frac{1}{2}", "0", "-1", "-\\frac{\\sqrt{3}}{2}"] },
+          { expr: "\\tan 30^\\circ \\times \\cos 60^\\circ + \\sin 60^\\circ \\times \\tan 45^\\circ", ans: "\\frac{2\\sqrt{3}}{3}", wrg: ["\\frac{\\sqrt{3}}{3}", "\\sqrt{3}", "\\frac{\\sqrt{3}}{2}", "1"] }
+        ];
+        const item = pickRandom(ops);
+        return {
+          id: `SLOT02_${item.ans.replace(/[^a-zA-Z0-9]/g, '')}`,
+          unit: "삼각비",
+          subTopic: "특수각 사칙연산",
+          difficulty: "하",
+          text: `다음 특수각 삼각비 식의 계산 결과로 옳은 것은?<br>$$${item.expr}$$`,
+          svg: `<svg viewBox="0 0 240 70" width="220" height="60" class="max-w-full"><rect x="20" y="10" width="200" height="45" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/><text x="120" y="38" font-size="13" text-anchor="middle" font-weight="bold" fill="#1e293b">특수각 기본 연산</text></svg>`,
+          choices: [item.ans, ...item.wrg],
+          answer: 0,
+          explanation: `특수각의 값을 대입하여 계산하면 정답은 $${item.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 03] 0도와 90도의 삼각비
+      () => {
+        const zeroNinety = [
+          { expr: "\\cos 0^\\circ \\times (\\tan 45^\\circ + \\sin 90^\\circ)", ans: "2", wrg: ["1", "0", "\\sqrt{2}", "\\frac{1}{2}"] },
+          { expr: "(\\sin 90^\\circ + \\cos 45^\\circ)(\\cos 0^\\circ - \\sin 45^\\circ)", ans: "\\frac{1}{2}", wrg: ["1", "0", "\\frac{\\sqrt{2}}{2}", "2"] },
+          { expr: "\\sin 0^\\circ \\times \\cos 90^\\circ + \\cos 0^\\circ \\div \\sin 30^\\circ", ans: "2", wrg: ["1", "0", "\\frac{1}{2}", "4"] }
+        ];
+        const item = pickRandom(zeroNinety);
+        return {
+          id: `SLOT03_${item.ans}`,
+          unit: "삼각비",
+          subTopic: "0도와 90도의 삼각비",
+          difficulty: "하",
+          text: `다음 식의 계산 결과로 옳은 것은?<br>$$${item.expr}$$`,
+          svg: `<svg viewBox="0 0 240 70" width="220" height="60" class="max-w-full"><rect x="20" y="10" width="200" height="45" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/><text x="120" y="38" font-size="13" text-anchor="middle" font-weight="bold" fill="#1e293b">0° 및 90° 삼각비</text></svg>`,
+          choices: [item.ans, ...item.wrg],
+          answer: 0,
+          explanation: `$\\sin 0^\\circ = 0, \\cos 0^\\circ = 1, \\sin 90^\\circ = 1, \\cos 90^\\circ = 0, \\tan 0^\\circ = 0$을 대입하면 정답은 $${item.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 04] 단위사분원과 선분의 길이
+      () => {
+        const angles = [54, 40, 35, 65];
+        const deg = pickRandom(angles);
+        return {
+          id: `SLOT04_${deg}`,
+          unit: "삼각비",
+          subTopic: "단위사분원과 선분의 길이",
+          difficulty: "하",
+          text: `반지름의 길이가 $1$인 사분원에서 $\\angle AOB = ${deg}^\\circ$이고 점 $A$에서 $x$축에 내린 수선의 발을 $B$라 할 때, 선분 $AB$의 길이를 나타내는 삼각비는?`,
+          svg: `<svg viewBox="0 0 240 150" width="220" height="140" class="max-w-full">
+                  <path d="M 170,120 A 120 120 0 0 0 50,0" fill="none" stroke="#2563eb" stroke-width="2"/>
+                  <line x1="50" y1="120" x2="190" y2="120" stroke="#1e293b" stroke-width="2"/>
+                  <line x1="50" y1="120" x2="50" y2="10" stroke="#1e293b" stroke-width="2"/>
+                  <line x1="50" y1="120" x2="120" y2="25" stroke="#1e293b" stroke-width="2"/>
+                  <line x1="120" y1="25" x2="120" y2="120" stroke="#ef4444" stroke-width="2"/>
+                  <text x="36" y="132" font-size="13" font-weight="bold" fill="#0f172a">O</text>
+                  <text x="124" y="20" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                  <text x="120" y="134" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                  <text x="70" y="112" font-size="11" font-weight="bold" fill="#ef4444">${deg}°</text>
+                </svg>`,
+          choices: [`\\sin ${deg}^\\circ`, `\\cos ${deg}^\\circ`, `\\tan ${deg}^\\circ`, `\\frac{1}{\\sin ${deg}^\\circ}`, `\\cos(90^\\circ - ${deg}^\\circ)`],
+          answer: 0,
+          explanation: `빗변 $OA=1$인 직각삼각형 $OAB$에서 높이 $AB = OA \\times \\sin ${deg}^\\circ = \\sin ${deg}^\\circ$입니다.`
+        };
+      },
+
+      // [슬롯 05] 직각삼각형 속 수선과 닮음 삼각비
+      () => {
+        const pairs = [
+          { b: 8, c: 6, hyp: 10, ask: "\\sin x", ans: "\\frac{3}{5}", wrg: ["\\frac{4}{5}", "\\frac{3}{4}", "\\frac{4}{3}", "\\frac{5}{4}"] },
+          { b: 12, c: 5, hyp: 13, ask: "\\cos x", ans: "\\frac{12}{13}", wrg: ["\\frac{5}{13}", "\\frac{5}{12}", "\\frac{12}{5}", "\\frac{13}{12}"] },
+          { b: 15, c: 8, hyp: 17, ask: "\\tan x", ans: "\\frac{8}{15}", wrg: ["\\frac{15}{8}", "\\frac{8}{17}", "\\frac{15}{17}", "\\frac{17}{15}"] }
+        ];
+        const p = pickRandom(pairs);
+        return {
+          id: `SLOT05_${p.hyp}_${p.c}`,
+          unit: "삼각비",
+          subTopic: "직각삼각형 닮음과 삼각비",
+          difficulty: "하",
+          text: `직각삼각형 $ABC$에서 $\\angle A = 90^\\circ$, $AH \\perp BC$, $AB = ${p.b}$, $AC = ${p.c}$이다. $\\angle BAH = x$라 할 때, $${p.ask}$의 값은?`,
+          svg: `<svg viewBox="0 0 240 140" width="220" height="130" class="max-w-full">
+                  <polygon points="40,110 200,110 80,30" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                  <line x1="80" y1="30" x2="80" y2="110" stroke="#ef4444" stroke-width="2"/>
+                  <text x="76" y="22" font-size="12" font-weight="bold" fill="#0f172a">A</text>
+                  <text x="28" y="122" font-size="12" font-weight="bold" fill="#0f172a">B</text>
+                  <text x="206" y="122" font-size="12" font-weight="bold" fill="#0f172a">C</text>
+                  <text x="82" y="122" font-size="11" font-weight="bold" fill="#ef4444">H</text>
+                  <text x="72" y="55" font-size="11" font-weight="bold" fill="#ef4444">x</text>
+                </svg>`,
+          choices: [p.ans, ...p.wrg],
+          answer: 0,
+          explanation: `닮음에 의해 $\\angle BAH = \\angle C$이므로 큰 직각삼각형에서 $\\angle C$ 기준의 삼각비를 구하면 $${p.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 06] 한 삼각비로부터 다른 삼각비 구하기
+      () => {
+        const list = [
+          { giv: "\\cos A = \\frac{4}{5}", req: "\\sin A + \\tan A", ans: "\\frac{27}{20}", wrg: ["\\frac{7}{5}", "\\frac{21}{20}", "\\frac{4}{3}", "\\frac{3}{5}"] },
+          { giv: "\\sin A = \\frac{3}{4}", req: "\\cos A", ans: "\\frac{\\sqrt{7}}{4}", wrg: ["\\frac{\\sqrt{7}}{3}", "\\frac{1}{4}", "\\frac{4}{5}", "\\frac{\\sqrt{5}}{4}"] },
+          { giv: "\\tan A = 2", req: "\\sin A \\times \\cos A", ans: "\\frac{2}{5}", wrg: ["\\frac{1}{5}", "\\frac{4}{5}", "\\frac{3}{5}", "\\frac{\\sqrt{5}}{5}"] }
+        ];
+        const item = pickRandom(list);
+        return {
+          id: `SLOT06_${item.ans.replace(/[^a-zA-Z0-9]/g, '')}`,
+          unit: "삼각비",
+          subTopic: "삼각비 사이의 관계",
+          difficulty: "하",
+          text: `직각삼각형 $ABC$에서 $${item.giv}$일 때, $${item.req}$의 값은? (단, $\\angle A$는 예각)`,
+          svg: `<svg viewBox="0 0 240 70" width="220" height="60" class="max-w-full"><rect x="20" y="10" width="200" height="45" rx="8" fill="#f8fafc" stroke="#cbd5e1" stroke-width="1.5"/><text x="120" y="38" font-size="13" text-anchor="middle" font-weight="bold" fill="#1e293b">삼각비 전환 연산</text></svg>`,
+          choices: [item.ans, ...item.wrg],
+          answer: 0,
+          explanation: `피타고라스 정리로 나머지 변을 구한 뒤 삼각비의 값을 대입하면 $${item.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 07] 원의 중심과 현의 수직이등분선
+      () => {
+        const radius = pickRandom([10, 13, 17, 25]);
+        const distMap = { 10: 6, 13: 5, 17: 8, 25: 7 };
+        const halfMap = { 10: 8, 13: 12, 17: 15, 25: 24 };
+        const d = distMap[radius];
+        const chord = halfMap[radius] * 2;
+        return {
+          id: `SLOT07_${radius}_${d}`,
+          unit: "원의 성질",
+          subTopic: "원의 중심과 현의 수직이등분선",
+          difficulty: "하",
+          text: `원 $O$에서 중심 $O$에서 현 $AB$에 내린 수선의 발을 $M$이라 하자. 원의 반지름 $OA = ${radius}\\text{ cm}$, $OM = ${d}\\text{ cm}$일 때, 현 $AB$의 길이는?`,
+          svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
+                  <circle cx="120" cy="80" r="60" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                  <line x1="70" y1="120" x2="170" y2="120" stroke="#1e293b" stroke-width="2.5"/>
+                  <line x1="120" y1="80" x2="120" y2="120" stroke="#ef4444" stroke-width="2"/>
+                  <line x1="120" y1="80" x2="70" y2="120" stroke="#2563eb" stroke-width="1.8" stroke-dasharray="3,3"/>
+                  <text x="124" y="76" font-size="12" font-weight="bold" fill="#2563eb">O</text>
+                  <text x="56" y="126" font-size="12" font-weight="bold" fill="#0f172a">A</text>
+                  <text x="176" y="126" font-size="12" font-weight="bold" fill="#0f172a">B</text>
+                  <text x="86" y="96" font-size="11" font-weight="bold" fill="#2563eb">${radius}</text>
+                  <text x="126" y="104" font-size="11" font-weight="bold" fill="#ef4444">${d}</text>
+                </svg>`,
+          choices: [`${chord}\\text{ cm}`, `${chord - 2}\\text{ cm}`, `${chord + 2}\\text{ cm}`, `${halfMap[radius]}\\text{ cm}`, `${chord + 4}\\text{ cm}`],
+          answer: 0,
+          explanation: `직각삼각형 $OAM$에서 $AM = \\sqrt{${radius}^2 - ${d}^2} = ${halfMap[radius]}\\text{ cm}$이므로 현 $AB = 2AM = ${chord}\\text{ cm}$입니다.`
+        };
+      },
+
+      // [슬롯 08] 원의 중심에서 같은 거리에 있는 두 현
+      () => {
+        const chordLen = pickRandom([14, 16, 18, 20]);
+        const dist = pickRandom([5, 6, 7, 8]);
+        return {
+          id: `SLOT08_${chordLen}_${dist}`,
+          unit: "원의 성질",
+          subTopic: "중심거리와 현의 길이 관계",
+          difficulty: "하",
+          text: `원 $O$에서 중심 $O$에서 두 현 $AB, CD$에 내린 수선의 발을 각각 $M, N$이라 하자. $OM = ON = ${dist}\\text{ cm}$이고 $AB = ${chordLen}\\text{ cm}$일 때, 현 $CD$의 길이는?`,
+          svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
+                  <circle cx="120" cy="80" r="60" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                  <line x1="70" y1="50" x2="170" y2="50" stroke="#1e293b" stroke-width="2.2"/>
+                  <line x1="70" y1="110" x2="170" y2="110" stroke="#1e293b" stroke-width="2.2"/>
+                  <line x1="120" y1="80" x2="120" y2="50" stroke="#ef4444" stroke-width="1.8"/>
+                  <line x1="120" y1="80" x2="120" y2="110" stroke="#ef4444" stroke-width="1.8"/>
+                  <text x="124" y="82" font-size="12" font-weight="bold" fill="#0f172a">O</text>
+                  <text x="174" y="52" font-size="11" font-weight="bold" fill="#0f172a">B</text>
+                  <text x="174" y="112" font-size="11" font-weight="bold" fill="#0f172a">D</text>
+                </svg>`,
+          choices: [`${chordLen}\\text{ cm}`, `${chordLen / 2}\\text{ cm}`, `${chordLen + 2}\\text{ cm}`, `${chordLen - 2}\\text{ cm}`, `${chordLen * 2}\\text{ cm}`],
+          answer: 0,
+          explanation: `원의 중심으로부터 같은 거리에 있는 두 현의 길이는 서로 같으므로 $CD = AB = ${chordLen}\\text{ cm}$입니다.`
+        };
+      },
+
+      // [슬롯 09] 원주각과 중심각의 기본 관계
+      () => {
+        const centerAngle = pickRandom([70, 80, 100, 110, 130]);
+        const circumAngle = centerAngle / 2;
+        return {
+          id: `SLOT09_${centerAngle}`,
+          unit: "원의 성질",
+          subTopic: "원주각과 중심각의 관계",
+          difficulty: "중",
+          text: `원 $O$에서 호 $AB$에 대한 중심각 $\\angle AOB = ${centerAngle}^\\circ$일 때, 원주각 $\\angle APB$의 크기 $x$는?`,
+          svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
+                  <circle cx="120" cy="85" r="55" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                  <line x1="120" y1="85" x2="80" y2="125" stroke="#2563eb" stroke-width="2"/>
+                  <line x1="120" y1="85" x2="160" y2="125" stroke="#2563eb" stroke-width="2"/>
+                  <line x1="120" y1="30" x2="80" y2="125" stroke="#1e293b" stroke-width="2"/>
+                  <line x1="120" y1="30" x2="160" y2="125" stroke="#1e293b" stroke-width="2"/>
+                  <text x="120" y="105" font-size="11" font-weight="bold" text-anchor="middle" fill="#2563eb">${centerAngle}°</text>
+                  <text x="120" y="24" font-size="12" font-weight="bold" text-anchor="middle" fill="#0f172a">P</text>
+                  <text x="120" y="48" font-size="11" font-weight="bold" text-anchor="middle" fill="#dc2626">x</text>
+                </svg>`,
+          choices: [`${circumAngle}^\\circ`, `${circumAngle + 5}^\\circ`, `${circumAngle - 5}^\\circ`, `${centerAngle}^\\circ`, `${circumAngle * 2}^\\circ`],
+          answer: 0,
+          explanation: `원주각의 크기는 중심각의 절반이므로 $x = \\frac{1}{2} \\times ${centerAngle}^\\circ = ${circumAngle}^\\circ$입니다.`
+        };
+      },
+
+      // [슬롯 10] 반원에 대한 원주각 90도와 삼각비
+      () => {
+        const angles = [
+          { a: 30, ask: "\\angle CAB", ans: "60^\\circ", wrg: ["30^\\circ", "45^\\circ", "70^\\circ", "90^\\circ"] },
+          { a: 55, ask: "\\angle CAB", ans: "35^\\circ", wrg: ["55^\\circ", "45^\\circ", "30^\\circ", "40^\\circ"] },
+          { a: 62, ask: "\\angle CAB", ans: "28^\\circ", wrg: ["62^\\circ", "38^\\circ", "32^\\circ", "45^\\circ"] }
+        ];
+        const it = pickRandom(angles);
+        return {
+          id: `SLOT10_${it.a}`,
+          unit: "원의 성질",
+          subTopic: "반원에 대한 원주각",
+          difficulty: "중",
+          text: `선분 $AB$가 원 $O$의 지름이고 원 위의 점 $C$에 대하여 $\\angle CBA = ${it.a}^\\circ$일 때, $\\angle CAB$의 크기는?`,
+          svg: `<svg viewBox="0 0 240 150" width="220" height="140" class="max-w-full">
+                  <circle cx="120" cy="80" r="55" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                  <line x1="65" y1="80" x2="175" y2="80" stroke="#1e293b" stroke-width="2.5"/>
+                  <polygon points="65,80 175,80 135,30" fill="none" stroke="#2563eb" stroke-width="2"/>
+                  <text x="52" y="85" font-size="12" font-weight="bold" fill="#0f172a">A</text>
+                  <text x="182" y="85" font-size="12" font-weight="bold" fill="#0f172a">B</text>
+                  <text x="135" y="24" font-size="12" font-weight="bold" fill="#0f172a">C</text>
+                </svg>`,
+          choices: [it.ans, ...it.wrg],
+          answer: 0,
+          explanation: `지름에 대한 원주각 $\\angle ACB = 90^\\circ$이므로 $\\angle CAB = 90^\\circ - ${it.a}^\\circ = ${it.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 11] 원의 외부 접선의 기본 성질
+      () => {
+        const paLen = pickRandom([6, 8, 10, 14]);
+        return {
+          id: `SLOT11_${paLen}`,
+          unit: "원의 성질",
+          subTopic: "원의 외부 접선의 성질",
+          difficulty: "중",
+          text: `원 $O$ 밖의 한 점 $P$에서 원에 그은 두 접선의 접점을 각각 $A, B$라 하자. $PA = ${paLen}\\text{ cm}$일 때, 선분 $PB$의 길이는?`,
+          svg: `<svg viewBox="0 0 240 130" width="220" height="120" class="max-w-full">
+                  <circle cx="140" cy="65" r="45" fill="#f8fafc" stroke="#1e293b" stroke-width="2"/>
+                  <line x1="40" y1="65" x2="126" y2="24" stroke="#2563eb" stroke-width="2"/>
+                  <line x1="40" y1="65" x2="126" y2="106" stroke="#2563eb" stroke-width="2"/>
+                  <text x="26" y="69" font-size="12" font-weight="bold" fill="#0f172a">P</text>
+                  <text x="124" y="18" font-size="12" font-weight="bold" fill="#0f172a">A</text>
+                  <text x="124" y="122" font-size="12" font-weight="bold" fill="#0f172a">B</text>
+                </svg>`,
+          choices: [`${paLen}\\text{ cm}`, `${paLen / 2}\\text{ cm}`, `${paLen + 2}\\text{ cm}`, `${paLen - 2}\\text{ cm}`, `${paLen * 2}\\text{ cm}`],
+          answer: 0,
+          explanation: `원 밖의 한 점에서 원에 그은 두 접선의 길이는 서로 같으므로 $PB = PA = ${paLen}\\text{ cm}$입니다.`
+        };
+      },
+
+      // [슬롯 12] 삼각비 활용 - 직각삼각형 변의 길이 (나무/기념탑/비행기)
+      () => {
+        const scenarios = [
+          { dist: 12, deg: 30, ans: "6", wrg: ["6\\sqrt{3}", "4\\sqrt{3}", "8", "6\\sqrt{2}"], name: "선분 AC", text: "직각삼각형 $ABC$에서 $\\angle C = 90^\\circ$, $\\angle B = 30^\\circ$, 빗변 $AB = 12$일 때, 선분 $AC$의 길이는?" },
+          { dist: 10, deg: 60, ans: "5\\sqrt{3}", wrg: ["5", "10\\sqrt{3}", "\\frac{10\\sqrt{3}}{3}", "5\\sqrt{2}"], name: "높이 AC", text: "직각삼각형 $ABC$에서 $\\angle B = 90^\\circ$, $\\angle A = 60^\\circ$, 밑변 $AB = 5$일 때, 높이 $BC$의 길이는?" },
+          { dist: 8, deg: 45, ans: "8\\sqrt{2}", wrg: ["8", "4\\sqrt{2}", "16", "8\\sqrt{3}"], name: "빗변 AC", text: "직각이등변삼각형 $ABC$에서 $\\angle B = 90^\\circ$, $AB = 8$일 때, 빗변 $AC$의 길이는?" }
+        ];
+        const s = pickRandom(scenarios);
+        return {
+          id: `SLOT12_${s.ans.replace(/[^a-zA-Z0-9]/g, '')}`,
+          unit: "삼각비",
+          subTopic: "직각삼각형 변의 길이 활용",
+          difficulty: "중",
+          text: s.text,
+          svg: `<svg viewBox="0 0 240 140" width="220" height="130" class="max-w-full"><polygon points="40,110 190,110 40,30" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/><text x="28" y="28" font-size="12" font-weight="bold">A</text><text x="28" y="122" font-size="12" font-weight="bold">C</text><text x="200" y="122" font-size="12" font-weight="bold">B</text></svg>`,
+          choices: [s.ans, ...s.wrg],
+          answer: 0,
+          explanation: `삼각비 정의를 적용하면 정답은 $${s.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 13] 삼각비 활용 - 일반삼각형 변의 길이 (수선 분할 터널/호수)
+      () => {
+        return {
+          id: "SLOT13_TUNNEL",
+          unit: "삼각비",
+          subTopic: "일반 삼각형 변의 길이",
+          difficulty: "중",
+          text: `두 지점 $B, C$ 사이의 거리를 구하기 위해 측량하였더니 $AB = 10\\text{ km}$, $AC = 8\\sqrt{3}\\text{ km}$, $\\angle A = 30^\\circ$이었다. 두 지점 $B, C$ 사이의 거리는? (교과서 172쪽 예제 2)`,
+          svg: `<svg viewBox="0 0 240 140" width="220" height="130" class="max-w-full"><polygon points="30,110 190,110 130,30" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/><text x="20" y="115" font-size="12" font-weight="bold">A(30°)</text><text x="195" y="115" font-size="12" font-weight="bold">C</text><text x="130" y="24" font-size="12" font-weight="bold">B</text></svg>`,
+          choices: ["2\\sqrt{13}\\text{ km}", "\\sqrt{52}\\text{ km}", "4\\sqrt{3}\\text{ km}", "14\\text{ km}", "6\\sqrt{3}\\text{ km}"],
+          answer: 0,
+          explanation: `꼭짓점 $B$에서 변 $AC$에 수선의 발 $D$를 내리면 $BD = 5$, $AD = 5\\sqrt{3}$이므로 $CD = 3\\sqrt{3}$입니다. $BC = \\sqrt{5^2 + (3\\sqrt{3})^2} = 2\\sqrt{13}\\text{ km}$입니다.`
+        };
+      },
+
+      // [슬롯 14] 삼각비 활용 - 삼각형의 넓이 공식
+      () => {
+        const pairs = [
+          { b: 6, c: 4, deg: 60, ans: "6\\sqrt{3}\\text{ cm}^2", wrg: ["12\\sqrt{3}\\text{ cm}^2", "6\\text{ cm}^2", "12\\text{ cm}^2", "3\\sqrt{3}\\text{ cm}^2"] },
+          { b: 8, c: 10, deg: 30, ans: "20\\text{ cm}^2", wrg: ["40\\text{ cm}^2", "20\\sqrt{3}\\text{ cm}^2", "10\\text{ cm}^2", "10\\sqrt{3}\\text{ cm}^2"] },
+          { b: 6, c: 6, deg: 45, ans: "9\\sqrt{2}\\text{ cm}^2", wrg: ["18\\sqrt{2}\\text{ cm}^2", "9\\text{ cm}^2", "18\\text{ cm}^2", "6\\sqrt{2}\\text{ cm}^2"] }
+        ];
+        const p = pickRandom(pairs);
+        return {
+          id: `SLOT14_${p.deg}_${p.b}`,
+          unit: "삼각비",
+          subTopic: "삼각형의 넓이",
+          difficulty: "중",
+          text: `$\\triangle ABC$에서 $AB = ${p.b}\\text{ cm}$, $AC = ${p.c}\\text{ cm}$, $\\angle A = ${p.deg}^\\circ$일 때, 삼각형 $ABC$의 넓이는?`,
+          svg: `<svg viewBox="0 0 240 140" width="220" height="130" class="max-w-full"><polygon points="40,110 190,110 100,35" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/><text x="30" y="115" font-size="12" font-weight="bold">A(${p.deg}°)</text><text x="195" y="115" font-size="12" font-weight="bold">B</text><text x="100" y="26" font-size="12" font-weight="bold">C</text></svg>`,
+          choices: [p.ans, ...p.wrg],
+          answer: 0,
+          explanation: `넓이 공식 $S = \\frac{1}{2}bc\\sin A$에 대입하면 $${p.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 15] 둔각삼각형 및 등변사다리꼴 넓이
+      () => {
+        const variants = [
+          { text: "$\\triangle ABC$에서 $AB = 8\\text{ cm}$, $BC = 5\\text{ cm}$, $\\angle B = 135^\\circ$일 때, 삼각형 $ABC$의 넓이는? (교과서 178쪽 09번)", ans: "10\\sqrt{2}\\text{ cm}^2", wrg: ["20\\sqrt{2}\\text{ cm}^2", "10\\text{ cm}^2", "20\\text{ cm}^2", "5\\sqrt{2}\\text{ cm}^2"] },
+          { text: "윗변 $AD = 2\\text{ cm}$, 아랫변 $BC = 6\\text{ cm}$, 옆변 $AB = CD = 4\\text{ cm}$, $\\angle C = 60^\\circ$인 등변사다리꼴 $ABCD$의 넓이는? (교과서 175쪽 5번)", ans: "8\\sqrt{3}\\text{ cm}^2", wrg: ["16\\sqrt{3}\\text{ cm}^2", "12\\sqrt{3}\\text{ cm}^2", "8\\text{ cm}^2", "16\\text{ cm}^2"] }
+        ];
+        const v = pickRandom(variants);
+        return {
+          id: `SLOT15_${v.ans.replace(/[^a-zA-Z0-9]/g, '')}`,
+          unit: "삼각비",
+          subTopic: "둔각삼각형 및 사다리꼴 넓이",
+          difficulty: "중",
+          text: v.text,
+          svg: `<svg viewBox="0 0 240 130" width="220" height="120" class="max-w-full"><polygon points="40,100 130,100 200,30" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/><text x="30" y="112" font-size="12" font-weight="bold">A</text><text x="135" y="112" font-size="12" font-weight="bold">B</text><text x="205" y="26" font-size="12" font-weight="bold">C</text></svg>`,
+          choices: [v.ans, ...v.wrg],
+          answer: 0,
+          explanation: `삼각비 높이 공식을 적용하여 계산하면 정답은 $${v.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 16] 원의 외접사각형의 성질
+      () => {
+        const quads = [
+          { ab: 12, bc: 10, cd: 8, ans: "10 cm", wrg: ["11 cm", "9 cm", "12 cm", "8 cm"] },
+          { ab: 9, bc: 8, cd: 7, ans: "8 cm", wrg: ["9 cm", "7 cm", "10 cm", "6 cm"] },
+          { ab: 15, bc: 18, cd: 13, ans: "10 cm", wrg: ["12 cm", "8 cm", "14 cm", "11 cm"] }
+        ];
+        const q = pickRandom(quads);
+        return {
+          id: `SLOT16_${q.ab}_${q.bc}`,
+          unit: "원의 성질",
+          subTopic: "원의 외접사각형의 성질",
+          difficulty: "중",
+          text: `원 $O$에 외접하는 사각형 $ABCD$에서 $AB = ${q.ab}\\text{ cm}$, $BC = ${q.bc}\\text{ cm}$, $CD = ${q.cd}\\text{ cm}$일 때, 변 $AD$의 길이는? (교과서 194쪽 예제 1)`,
+          svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
+                  <circle cx="120" cy="85" r="45" fill="#f8fafc" stroke="#2563eb" stroke-width="2"/>
+                  <polygon points="60,40 40,130 190,130 170,40" fill="none" stroke="#1e293b" stroke-width="2.2"/>
+                  <text x="50" y="32" font-size="12" font-weight="bold">A</text>
+                  <text x="26" y="138" font-size="12" font-weight="bold">B</text>
+                  <text x="196" y="138" font-size="12" font-weight="bold">C</text>
+                  <text x="176" y="32" font-size="12" font-weight="bold">D</text>
+                </svg>`,
+          choices: [q.ans, ...q.wrg],
+          answer: 0,
+          explanation: `외접사각형 대변의 합 정리 $AB + CD = AD + BC$에 대입하면 $AD = ${q.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 17] 원에 외접하는 삼각형의 둘레와 접선
+      () => {
+        const adLen = pickRandom([10, 12, 14, 16]);
+        const peri = adLen * 2;
+        return {
+          id: `SLOT17_${adLen}`,
+          unit: "원의 성질",
+          subTopic: "접선과 외부 삼각형 둘레",
+          difficulty: "중",
+          text: `직선 $AD, AE, BC$가 각각 세 점 $D, E, F$에서 원 $O$에 접하고 $AD = ${adLen}\\text{ cm}$일 때, $\\triangle ABC$의 둘레의 길이는? (교과서 195쪽 4번)`,
+          svg: `<svg viewBox="0 0 240 150" width="220" height="140" class="max-w-full">
+                  <circle cx="150" cy="75" r="40" fill="#f8fafc" stroke="#1e293b" stroke-width="2"/>
+                  <line x1="40" y1="75" x2="150" y2="35" stroke="#2563eb" stroke-width="2"/>
+                  <line x1="40" y1="75" x2="150" y2="115" stroke="#2563eb" stroke-width="2"/>
+                  <line x1="100" y1="53" x2="100" y2="97" stroke="#ef4444" stroke-width="2"/>
+                  <text x="28" y="79" font-size="12" font-weight="bold">A</text>
+                  <text x="105" y="50" font-size="12" font-weight="bold">B</text>
+                  <text x="105" y="108" font-size="12" font-weight="bold">C</text>
+                </svg>`,
+          choices: [`${peri}\\text{ cm}`, `${adLen}\\text{ cm}`, `${adLen + peri / 2}\\text{ cm}`, `${peri + 4}\\text{ cm}`, `${peri - 4}\\text{ cm}`],
+          answer: 0,
+          explanation: `접선의 성질에 의해 $\\triangle ABC$의 둘레는 $AD + AE = 2AD = ${peri}\\text{ cm}$입니다.`
+        };
+      },
+
+      // [슬롯 18] 동심원 사이의 현과 트랙의 넓이
+      () => {
+        const chord = pickRandom([16, 20, 24]);
+        const half = chord / 2;
+        const area = half * half;
+        return {
+          id: `SLOT18_${chord}`,
+          unit: "원의 성질",
+          subTopic: "동심원 트랙 넓이",
+          difficulty: "중",
+          text: `중심이 같은 두 동심원에서 큰 원의 현 $AB$가 작은 원에 접하고 그 길이가 $${chord}\\text{ cm}$일 때, 두 원 사이의 트랙(도넛 모양)의 넓이는? (교과서 190쪽 창의융합)`,
+          svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
+                  <circle cx="120" cy="80" r="65" fill="#f1f5f9" stroke="#1e293b" stroke-width="2"/>
+                  <circle cx="120" cy="80" r="40" fill="#ffffff" stroke="#1e293b" stroke-width="2"/>
+                  <line x1="68" y1="40" x2="172" y2="40" stroke="#ef4444" stroke-width="2.5"/>
+                  <text x="56" y="38" font-size="12" font-weight="bold">A</text>
+                  <text x="178" y="38" font-size="12" font-weight="bold">B</text>
+                </svg>`,
+          choices: [`${area}\\pi\\text{ cm}^2`, `${area * 4}\\pi\\text{ cm}^2`, `${area / 2}\\pi\\text{ cm}^2`, `${area * 2}\\pi\\text{ cm}^2`, `${area + 25}\\pi\\text{ cm}^2`],
+          answer: 0,
+          explanation: `피타고라스 정리에 의해 $R^2 - r^2 = (${half})^2 = ${area}$이므로 트랙의 넓이는 $\\pi(R^2 - r^2) = ${area}\\pi\\text{ cm}^2$입니다.`
+        };
+      },
+
+      // [슬롯 19] 원에 내접하는 사각형의 대각의 성질
+      () => {
+        const a = pickRandom([70, 75, 80, 85]);
+        const c = 180 - a;
+        return {
+          id: `SLOT19_${a}`,
+          unit: "원의 성질",
+          subTopic: "내접사각형 대각의 합",
+          difficulty: "중",
+          text: `원 $O$에 내접하는 사각형 $ABCD$에서 $\\angle A = ${a}^\\circ$일 때, 마주보는 대각 $\\angle C$의 크기는?`,
+          svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
+                  <circle cx="120" cy="80" r="55" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                  <polygon points="90,30 60,110 160,135 175,60" fill="none" stroke="#2563eb" stroke-width="2"/>
+                  <text x="86" y="24" font-size="12" font-weight="bold">A(${a}°)</text>
+                  <text x="165" y="148" font-size="12" font-weight="bold">C</text>
+                </svg>`,
+          choices: [`${c}^\\circ`, `${c - 10}^\\circ`, `${c + 10}^\\circ`, `${a}^\\circ`, `${180}^\\circ`],
+          answer: 0,
+          explanation: `원에 내접하는 사각형의 대각의 합은 $180^\\circ$이므로 $\\angle C = 180^\\circ - ${a}^\\circ = ${c}^\\circ$입니다.`
+        };
+      },
+
+      // [슬롯 20] 원주각의 크기와 호의 길이의 정비례
+      () => {
+        const ratios = [
+          { r: "2 : 3 : 4", ans: "80^\\circ", wrg: ["60^\\circ", "40^\\circ", "90^\\circ", "75^\\circ"], text: "원 $O$에서 세 호의 길이의 비가 $\\widehat{AB} : \\widehat{BC} : \\widehat{CA} = 2 : 3 : 4$일 때, $\\angle ABC$의 크기는?" },
+          { r: "3 : 4 : 5", ans: "45^\\circ", wrg: ["60^\\circ", "75^\\circ", "90^\\circ", "50^\\circ"], text: "원 $O$에서 세 호의 길이의 비가 $\\widehat{AB} : \\widehat{BC} : \\widehat{CA} = 3 : 4 : 5$일 때, 가장 작은 원주각 $\\angle BCA$의 크기는?" }
+        ];
+        const item = pickRandom(ratios);
+        return {
+          id: `SLOT20_${item.ans}`,
+          unit: "원의 성질",
+          subTopic: "원주각과 호의 길이 비례",
+          difficulty: "중",
+          text: item.text,
+          svg: `<svg viewBox="0 0 240 150" width="220" height="140" class="max-w-full"><circle cx="120" cy="75" r="55" fill="#f8fafc" stroke="#1e293b" stroke-width="2.2"/><polygon points="120,20 65,120 175,110" fill="none" stroke="#2563eb" stroke-width="2"/><text x="116" y="14" font-size="12" font-weight="bold">A</text><text x="50" y="128" font-size="12" font-weight="bold">B</text><text x="182" y="118" font-size="12" font-weight="bold">C</text></svg>`,
+          choices: [item.ans, ...item.wrg],
+          answer: 0,
+          explanation: `원 전체에 대한 원주각의 총합은 $180^\\circ$이므로 비례 배분하면 $${item.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 21] 접선과 현이 이루는 각 (접현각 기본)
+      () => {
+        const deg = pickRandom([55, 62, 65, 70]);
+        return {
+          id: `SLOT21_${deg}`,
+          unit: "원의 성질",
+          subTopic: "접현각의 기본 성질",
+          difficulty: "상",
+          text: `직선 $AT$가 원 $O$의 접선이고 접점을 $A$라 할 때, 현 $AB$와 접선이 이루는 각 $\\angle BAT = ${deg}^\\circ$이다. 호 $AB$에 대한 원주각 $\\angle BCA$의 크기는? (교과서 204쪽)`,
+          svg: `<svg viewBox="0 0 240 150" width="220" height="140" class="max-w-full">
+                  <circle cx="120" cy="70" r="50" fill="#f8fafc" stroke="#1e293b" stroke-width="2.2"/>
+                  <line x1="20" y1="120" x2="220" y2="120" stroke="#1e293b" stroke-width="2.5"/>
+                  <polygon points="120,120 160,30 80,40" fill="none" stroke="#2563eb" stroke-width="2"/>
+                  <text x="116" y="135" font-size="12" font-weight="bold">A</text>
+                  <text x="210" y="135" font-size="12" font-weight="bold">T</text>
+                  <text x="165" y="26" font-size="12" font-weight="bold">B</text>
+                  <text x="70" y="36" font-size="12" font-weight="bold">C</text>
+                </svg>`,
+          choices: [`${deg}^\\circ`, `${90 - deg}^\\circ`, `${180 - deg}^\\circ`, `${deg / 2}^\\circ`, `${deg + 10}^\\circ`],
+          answer: 0,
+          explanation: `접선과 현이 이루는 각은 그 현에 대한 원주각의 크기와 같으므로 $\\angle BCA = \\angle BAT = ${deg}^\\circ$입니다.`
+        };
+      },
+
+      // [슬롯 22] 정육면체/입체도형 대각선 삼각비
+      () => {
+        return {
+          id: "SLOT22_CUBE",
+          unit: "삼각비",
+          subTopic: "정육면체 대각선의 삼각비",
+          difficulty: "상",
+          text: `한 모서리의 길이가 $1$인 정육면체 $ABCD-EFGH$에서 대각선 $AG$와 밑면 대각선 $EG$가 이루는 각의 크기를 $x$라 할 때, $\\cos x$의 값은? (교과서 158쪽 발전 5번)`,
+          svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
+                  <rect x="50" y="60" width="70" height="70" fill="none" stroke="#1e293b" stroke-width="2"/>
+                  <rect x="90" y="20" width="70" height="70" fill="none" stroke="#94a3b8" stroke-dasharray="3,3" stroke-width="1.5"/>
+                  <line x1="50" y1="60" x2="90" y2="20" stroke="#1e293b" stroke-width="2"/>
+                  <line x1="120" y1="60" x2="160" y2="20" stroke="#1e293b" stroke-width="2"/>
+                  <line x1="120" y1="130" x2="160" y2="90" stroke="#1e293b" stroke-width="2"/>
+                  <line x1="50" y1="130" x2="90" y2="90" stroke="#94a3b8" stroke-dasharray="3,3" stroke-width="1.5"/>
+                  <line x1="90" y1="20" x2="160" y2="90" stroke="#ef4444" stroke-width="2.5"/>
+                  <line x1="90" y1="90" x2="160" y2="90" stroke="#2563eb" stroke-width="2" stroke-dasharray="3,3"/>
+                  <text x="82" y="16" font-size="12" font-weight="bold">A</text>
+                  <text x="165" y="95" font-size="12" font-weight="bold">G</text>
+                  <text x="76" y="92" font-size="12" font-weight="bold">E</text>
+                </svg>`,
+          choices: ["\\frac{\\sqrt{6}}{3}", "\\frac{\\sqrt{3}}{3}", "\\frac{\\sqrt{2}}{2}", "\\frac{\\sqrt{6}}{2}", "\\frac{1}{3}"],
+          answer: 0,
+          explanation: `밑면 대각선 $EG = \\sqrt{2}$, 대각선 $AG = \\sqrt{3}$이므로 $\\cos x = \\frac{EG}{AG} = \\frac{\\sqrt{2}}{\\sqrt{3}} = \\frac{\\sqrt{6}}{3}$입니다.`
+        };
+      },
+
+      // [슬롯 23] 기하 종이접기 (정사각형 회전 또는 원 종이접기)
+      () => {
+        const variants = [
+          {
+            id: "SLOT23_SQUARE_ROT",
+            text: "한 변의 길이가 $8\\sqrt{3}\\text{ cm}$인 정사각형 $ABCD$를 점 $A$를 중심으로 $30^\\circ$만큼 회전시켜 정사각형 $AB'C'D'$를 만들었다. 두 정사각형이 겹치는 부분의 넓이는? (교과서 175쪽 발전 6번)",
+            ans: "64\\sqrt{3}\\text{ cm}^2", wrg: ["96\\text{ cm}^2", "128\\sqrt{3}\\text{ cm}^2", "48\\sqrt{3}\\text{ cm}^2", "72\\text{ cm}^2"],
+            svg: `<svg viewBox="0 0 280 230" width="260" height="210" class="max-w-full">
+                    <polygon points="90,180 176.6,130 147.7,80 90,80" fill="#e0e7ff" stroke="#4338ca" stroke-width="2"/>
+                    <rect x="90" y="80" width="100" height="100" fill="none" stroke="#94a3b8" stroke-dasharray="4,4" stroke-width="1.8"/>
+                    <polygon points="90,180 176.6,130 126.6,43.4 40,93.4" fill="none" stroke="#0f172a" stroke-width="2.2"/>
+                    <text x="75" y="190" font-size="13" font-weight="bold">A</text>
+                  </svg>`
+          },
+          {
+            id: "SLOT23_CIRCLE_FOLD",
+            text: "반지름의 길이가 $6\\text{ cm}$인 원 모양의 종이를 호 위의 점 $P$가 원의 중심 $O$와 겹치도록 접었을 때, 접힌 선분(현) $AB$의 길이는? (교과서 207쪽 03번)",
+            ans: "6\\sqrt{3}\\text{ cm}", wrg: ["12\\text{ cm}", "6\\sqrt{2}\\text{ cm}", "8\\sqrt{3}\\text{ cm}", "6\\text{ cm}"],
+            svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
+                    <circle cx="120" cy="80" r="55" fill="#f8fafc" stroke="#1e293b" stroke-width="2"/>
+                    <line x1="72" y1="108" x2="168" y2="108" stroke="#ef4444" stroke-width="2.5"/>
+                    <text x="124" y="76" font-size="12" font-weight="bold" fill="#2563eb">O</text>
+                  </svg>`
+          }
+        ];
+        const v = pickRandom(variants);
+        return {
+          id: v.id,
+          unit: "복합 기하",
+          subTopic: "도형의 회전과 종이접기",
+          difficulty: "상",
+          text: v.text,
+          svg: v.svg,
+          choices: [v.ans, ...v.wrg],
+          answer: 0,
+          explanation: `보조선을 긋고 삼각비와 피타고라스 정리를 연립하면 정답은 $${v.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 24] 일차함수 기울기와 삼각비 또는 원형 무대 지름
+      () => {
+        const variants = [
+          {
+            id: "SLOT24_SLOPE",
+            text: "일차함수 $y = 2x + 4$의 그래프가 $x$축의 양의 방향과 이루는 예각의 크기를 $a$라 할 때, $\\sin a \\times \\cos a$의 값은? (교과서 179쪽 10번)",
+            ans: "\\frac{2}{5}", wrg: ["\\frac{1}{5}", "\\frac{4}{5}", "\\frac{\\sqrt{5}}{5}", "\\frac{3}{5}"],
+            svg: `<svg viewBox="0 0 240 120" width="220" height="110" class="max-w-full"><line x1="20" y1="90" x2="220" y2="90" stroke="#94a3b8" stroke-width="1.5"/><line x1="120" y1="110" x2="120" y2="10" stroke="#94a3b8" stroke-width="1.5"/><line x1="70" y1="110" x2="170" y2="20" stroke="#2563eb" stroke-width="2.5"/></svg>`
+          },
+          {
+            id: "SLOT24_THEATER",
+            text: "무대의 길이가 $12\\text{ m}$인 원형 극장이 있다. 원 위의 한 점에서 무대의 양 끝을 바라본 원주각의 크기가 $60^\\circ$일 때, 이 원형 극장의 지름의 길이는? (교과서 209쪽 사고력 14번)",
+            ans: "8\\sqrt{3}\\text{ m}", wrg: ["12\\sqrt{3}\\text{ m}", "16\\text{ m}", "14\\sqrt{3}\\text{ m}", "24\\text{ m}"],
+            svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full"><circle cx="120" cy="80" r="55" fill="#f8fafc" stroke="#1e293b" stroke-width="2.2"/><line x1="72" y1="110" x2="168" y2="110" stroke="#ef4444" stroke-width="3"/></svg>`
+          }
+        ];
+        const v = pickRandom(variants);
+        return {
+          id: v.id,
+          unit: "복합 기하",
+          subTopic: "기울기 및 외접원 응용",
+          difficulty: "상",
+          text: v.text,
+          svg: v.svg,
+          choices: [v.ans, ...v.wrg],
+          answer: 0,
+          explanation: `기하적 관계식을 삼각비로 표현하여 풀이하면 정답은 $${v.ans}$입니다.`
+        };
+      },
+
+      // [슬롯 25] 최고난도 보조선 작도 킬러 (회전이동/비특수각 수선 분할/공통외접선)
+      () => {
+        const killers = [
+          {
+            id: "SLOT25_ROTATION",
+            text: "정삼각형 $ABC$의 내부의 한 점 $P$에 대하여 $PA = 3$, $PB = 4$, $PC = 5$일 때, $\\angle APB$의 크기는? (최고난도 회전이동 보조선 킬러)",
+            ans: "150^\\circ", wrg: ["120^\\circ", "135^\\circ", "160^\\circ", "105^\\circ"],
+            svg: `<svg viewBox="0 0 240 150" width="220" height="140" class="max-w-full"><polygon points="120,20 45,130 195,130" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/><circle cx="110" cy="95" r="3.5" fill="#ef4444"/></svg>`,
+            exp: "<strong>[보조선 작도]</strong> 점 $B$를 중심으로 $\\triangle PBC$를 $60^\\circ$ 회전시킨 $\\triangle P'BA$를 작도하면 $\\triangle PBP'$는 정삼각형, $\\triangle APP'$는 직각삼각형($90^\\circ$)이 되므로 $\\angle APB = 90^\\circ + 60^\\circ = 150^\\circ$입니다."
+          },
+          {
+            id: "SLOT25_AUX_SPLIT",
+            text: "$\\triangle ABC$에서 $\\angle B = 45^\\circ$, $\\angle C = 75^\\circ$, $BC = 4\\sqrt{3} + 4$일 때, 변 $AB$의 길이는? (최고난도 비특수각 수선 분할 킬러)",
+            ans: "8\\sqrt{2}", wrg: ["8", "4\\sqrt{6}", "6\\sqrt{2}", "8\\sqrt{3}"],
+            svg: `<svg viewBox="0 0 240 140" width="220" height="130" class="max-w-full"><polygon points="90,25 35,120 205,120" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/></svg>`,
+            exp: "<strong>[보조선 작도]</strong> 꼭짓점 $C$에서 변 $AB$에 수선 $CH$를 내리면 $\\triangle BCH$는 직각이등변삼각형, $\\triangle ACH$는 $30^\\circ-60^\\circ-90^\\circ$ 특수각 직각삼각형이 되어 $AB = 8\\sqrt{2}$입니다."
+          },
+          {
+            id: "SLOT25_EXT_TANGENT",
+            text: "반지름의 길이가 각각 $9\\text{ cm}, 4\\text{ cm}$인 두 원 $O, O'$가 외접하고 있다. 두 원의 공통외접선의 접점을 각각 $A, B$라 할 때, 선분 $AB$의 길이는? (공통외접선 평행수선 킬러)",
+            ans: "12\\text{ cm}", wrg: ["13\\text{ cm}", "10\\sqrt{2}\\text{ cm}", "12\\sqrt{2}\\text{ cm}", "14\\text{ cm}"],
+            svg: `<svg viewBox="0 0 240 140" width="220" height="130" class="max-w-full"><circle cx="75" cy="80" r="45" fill="#f8fafc" stroke="#1e293b" stroke-width="2"/><circle cx="165" cy="100" r="25" fill="#f8fafc" stroke="#1e293b" stroke-width="2"/><line x1="75" y1="35" x2="165" y2="75" stroke="#ef4444" stroke-width="2.5"/></svg>`,
+            exp: "<strong>[보조선 작도]</strong> 중심 $O'$에서 반지름 $OA$에 수선의 발 $H$를 내리면 중심거리 $OO' = 13$, $OH = 5$인 직각삼각형이 만들어져 $AB = HO' = \\sqrt{13^2 - 5^2} = 12\\text{ cm}$입니다."
+          }
+        ];
+        const k = pickRandom(killers);
+        return {
+          id: k.id,
+          unit: "최상위 기하",
+          subTopic: "보조선 작도 킬러",
+          difficulty: "상",
+          text: k.text,
+          svg: k.svg,
+          choices: [k.ans, ...k.wrg],
+          answer: 0,
+          explanation: k.exp
+        };
+      }
+    ];
+
+    /* ==========================================================================
+       3. 25문항 시험지 자동 생성기 (generateExamPaper)
+       - 1번~25번까지 완전히 다른 고유 개념 슬롯으로 조립
+       - 직전 회차에 출제되었던 문제 ID를 추적하여 다음 회차에서는 새로운 변형 문항 우선 출제
+       ========================================================================== */
+    function generateExamPaper() {
+      try {
+        let prevQuestionIds = [];
+        try {
+          const savedIds = localStorage.getItem('last_exam_question_ids');
+          if (savedIds) prevQuestionIds = JSON.parse(savedIds);
+        } catch (e) {}
+
+        const paper = [];
+        const currentExamIds = [];
+
+        // 1번부터 25번 슬롯까지 순차적으로 생성
+        for (let i = 0; i < SLOT_GENERATORS.length; i++) {
+          const generatorFn = SLOT_GENERATORS[i];
+          let selectedCandidate = null;
+
+          // 직전 회차에 나왔던 문제 ID를 피하기 위해 최대 5회 시도
+          for (let attempt = 0; attempt < 5; attempt++) {
+            const cand = generatorFn();
+            if (!prevQuestionIds.includes(cand.id)) {
+              selectedCandidate = cand;
+              break;
+            }
+            selectedCandidate = cand; // 모든 후보가 이전에 나왔다면 최신 변형 채택
+          }
+
+          // 보기 무작위 셔플
+          const shuffled = shuffleChoices(selectedCandidate.choices, selectedCandidate.answer);
+          paper.push({
+            ...selectedCandidate,
+            qNum: i + 1,
+            choices: shuffled.choices,
+            answer: shuffled.answerIndex
+          });
+
+          currentExamIds.push(selectedCandidate.id);
+        }
+
+        // 현재 출제된 25개 문제 ID를 로컬에 기억시켜 다음 회차에서 회피
+        try {
+          localStorage.setItem('last_exam_question_ids', JSON.stringify(currentExamIds));
+        } catch (e) {}
+
+        return paper;
+      } catch (err) {
+        console.error("Exam generation fallback:", err);
+        return SLOT_GENERATORS.map((fn, idx) => {
+          const q = fn();
+          const shuffled = shuffleChoices(q.choices, q.answer);
+          return {
+            ...q,
+            qNum: idx + 1,
+            choices: shuffled.choices,
+            answer: shuffled.answerIndex
+          };
+        });
+      }
+    }
+
+    /* ==========================================================================
+       4. 학생 인증 및 시험 진행 제어 (Exam Logic & UI)
        ========================================================================== */
     const TEXTBOOK_QUESTION_POOL = [
       // ---------------- [하 난이도 : 기본 개념 및 공식 연산] ----------------
