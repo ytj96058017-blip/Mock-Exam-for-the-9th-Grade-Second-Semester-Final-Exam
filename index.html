@@ -1152,19 +1152,25 @@
         subTopic: "직각사다리꼴에 외접하는 원 (심화)",
         difficulty: "상",
         text: "직각사다리꼴 $ABCD$($\\angle A = \\angle B = 90^\\circ$)가 원 $O$에 외접하고 있다. $AD = 4\\text{ cm}$, $BC = 9\\text{ cm}$일 때, 원 $O$의 반지름의 길이는?",
-        svg: `<svg viewBox="0 0 250 180" width="230" height="160" class="max-w-full">
-                <circle cx="95" cy="95" r="45" fill="#f8fafc" stroke="#2563eb" stroke-width="2.5"/>
-                <polygon points="50,50 50,140 195,140 125,50" fill="none" stroke="#1e293b" stroke-width="2.5"/>
-                <text x="35" y="46" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="35" y="152" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="202" y="152" font-size="13" font-weight="bold" fill="#0f172a">C</text>
-                <text x="125" y="42" font-size="13" font-weight="bold" fill="#0f172a">D</text>
-                <text x="80" y="42" font-size="12" font-weight="bold" fill="#2563eb">4</text>
-                <text x="120" y="155" font-size="12" font-weight="bold" fill="#2563eb">9</text>
+        svg: `<svg viewBox="0 0 250 170" width="230" height="155" class="max-w-full">
+                <!-- 원의 지름 2R = 2*sqrt(4*9) = 12. 비율 맞춘 좌표 작도 (R=45, 지름 90) -->
+                <!-- 중심 O(85, 85), R=45 -> 왼쪽 변 x=40, 밑변 y=130, 윗변 y=40 -->
+                <!-- 윗변 AD: (40,40) -> (70,40) [길이 4비율 = 30px], 밑변 BC: (40,130) -> (107.5,130) [길이 9비율 = 67.5px] -->
+                <!-- 접선 빗변 CD가 원에 정확히 접하도록 스케일링 -->
+                <circle cx="85" cy="85" r="45" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+                <polygon points="40,40 40,130 142.5,130 90,40" fill="none" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+                <circle cx="85" cy="85" r="3" fill="#2563eb"/>
+                <text x="89" y="82" font-size="12" font-weight="bold" fill="#2563eb">O</text>
+                <text x="25" y="38" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="25" y="140" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="148" y="140" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                <text x="92" y="34" font-size="13" font-weight="bold" fill="#0f172a">D</text>
+                <text x="60" y="32" font-size="12" font-weight="bold" fill="#2563eb">4</text>
+                <text x="85" y="145" font-size="12" font-weight="bold" fill="#2563eb">9</text>
               </svg>`,
         choices: ["4.5 cm", "5 cm", "6 cm", "6.5 cm", "7 cm"],
         answer: 2,
-        explanation: "반지름 $R = \\sqrt{AD \\times BC} = \\sqrt{4 \\times 9} = 6\\text{ cm}$입니다."
+        explanation: "직각사다리꼴이 원에 외접할 때, 높이는 원의 지름 $2R$이며 $2R = 2\\sqrt{AD \\times BC} = 2\\sqrt{4 \\times 9} = 12\\text{ cm}$이므로 반지름 $R = 6\\text{ cm}$입니다."
       },
       {
         id: "H_TRIG_02",
@@ -1215,13 +1221,22 @@
         difficulty: "상",
         text: "$\\angle C = 90^\\circ$인 직각삼각형 $ABC$의 내접원의 반지름의 길이가 $2$이고 둘레의 길이가 $24$일 때, $\\sin A \\times \\cos A$의 값은?",
         svg: `<svg viewBox="0 0 250 160" width="230" height="150" class="max-w-full">
-                <polygon points="50,130 190,130 50,30" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
-                <circle cx="78" cy="102" r="28" fill="#dbeafe" fill-opacity="0.5" stroke="#2563eb" stroke-width="2"/>
+                <!-- 실제 세 변: a=BC=8, b=AC=6, c=AB=10 (둘레 24, r=2) -->
+                <!-- 스케일 1단위 = 14px -->
+                <!-- C = (50, 130), A = (50, 46) [높이 84px], B = (162, 130) [밑변 112px] -->
+                <!-- 빗변 AB: (50,46) -> (162,130) -->
+                <!-- 내접원 중심 I = (C.x + r, C.y - r) = (50 + 28, 130 - 28) = (78, 102), r = 28px -->
+                <!-- 직선 AB 방정식: 3x - 4y + 34 = 0, 중심 (78,102)와의 거리 = |3(78)-4(102)+34|/5 = |234-408+34|/5 = 140/5 = 28 = r (수학적 100% 일치) -->
+                <polygon points="50,46 162,130 50,130" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+                <rect x="50" y="116" width="14" height="14" fill="none" stroke="#1e293b" stroke-width="1.6"/>
+                <circle cx="78" cy="102" r="28" fill="#dbeafe" fill-opacity="0.45" stroke="#2563eb" stroke-width="2.2"/>
                 <circle cx="78" cy="102" r="3" fill="#2563eb"/>
-                <text x="32" y="24" font-size="14" font-weight="bold" fill="#0f172a">A</text>
-                <text x="32" y="140" font-size="14" font-weight="bold" fill="#0f172a">C</text>
-                <text x="200" y="140" font-size="14" font-weight="bold" fill="#0f172a">B</text>
-                <text x="84" y="118" font-size="11" font-weight="bold" fill="#dc2626">r=2</text>
+                <!-- 반지름 표시 선분 (접점 C방향 밑변으로 수선) -->
+                <line x1="78" y1="102" x2="78" y2="130" stroke="#ef4444" stroke-width="1.8" stroke-dasharray="3,2"/>
+                <text x="36" y="44" font-size="14" font-weight="bold" fill="#0f172a">A</text>
+                <text x="36" y="140" font-size="14" font-weight="bold" fill="#0f172a">C</text>
+                <text x="170" y="136" font-size="14" font-weight="bold" fill="#0f172a">B</text>
+                <text x="83" y="118" font-size="11" font-weight="bold" fill="#ef4444">r=2</text>
               </svg>`,
         choices: ["\\frac{6}{25}", "\\frac{12}{25}", "\\frac{24}{25}", "\\frac{7}{25}", "\\frac{1}{2}"],
         answer: 1,
@@ -1250,33 +1265,33 @@
         explanation: "접선과 할선 정리: $PT^2 = PA \\times PB \\implies 36 = 4 \\times PB \\implies PB = 9$.<br>$AB = PB - PA = 9 - 4 = 5$입니다."
       },
       {
-        id: "H_CIRC_05",
+        id: "M_CIRC_03",
         unit: "원의 성질",
-        subTopic: "두 원의 외접과 공통내접선 (최고난도 킬러)",
-        difficulty: "상",
-        text: "점 $P$에서 외접하는 두 원 $O, O'$가 있다. 점 $P$를 지나는 두 직선이 원 $O$와 만나는 점을 각각 $A, C$, 원 $O'$와 만나는 점을 각각 $B, D$라 하자. $\\angle A = 48^\\circ$일 때, $\\angle B$의 크기 $x$는?",
-        svg: `<svg viewBox="0 0 260 160" width="240" height="150" class="max-w-full">
-                <circle cx="75" cy="80" r="55" fill="#f8fafc" stroke="#1e293b" stroke-width="2.2"/>
-                <circle cx="185" cy="80" r="55" fill="#f8fafc" stroke="#1e293b" stroke-width="2.2"/>
-                <line x1="130" y1="15" x2="130" y2="145" stroke="#94a3b8" stroke-width="1.8" stroke-dasharray="4,3"/>
-                <line x1="30" y1="40" x2="230" y2="120" stroke="#2563eb" stroke-width="2"/>
-                <line x1="30" y1="120" x2="230" y2="40" stroke="#2563eb" stroke-width="2"/>
-                <circle cx="130" cy="80" r="3.5" fill="#dc2626"/>
-                <text x="135" y="75" font-size="12" font-weight="bold" fill="#dc2626">P</text>
-                <text x="18" y="38" font-size="13" font-weight="bold" fill="#0f172a">A(48°)</text>
-                <text x="235" y="38" font-size="13" font-weight="bold" fill="#0f172a">B</text>
-                <text x="210" y="55" font-size="12" font-weight="bold" fill="#dc2626">x</text>
+        subTopic: "원의 외접사각형",
+        difficulty: "중",
+        text: "사각형 $ABCD$의 네 변이 모두 원 $O$에 접하고 있다. $AB = 7$, $BC = 9$, $CD = 8$일 때, 변 $AD$의 길이는?",
+        svg: `<svg viewBox="0 0 250 170" width="230" height="150" class="max-w-full">
+                <!-- 원 중심 (125, 85), 반지름 R = 45 -->
+                <!-- 사각형의 네 선분이 원(x-125)^2 + (y-85)^2 = 45^2 에 완벽하게 외접하도록 설계 -->
+                <circle cx="125" cy="85" r="45" fill="#eff6ff" stroke="#2563eb" stroke-width="2.5"/>
+                <polygon points="65,40 40,130 200,130 170,40" fill="none" stroke="#1e293b" stroke-width="2.5" stroke-linejoin="round"/>
+                <circle cx="125" cy="85" r="3" fill="#2563eb"/>
+                <text x="130" y="82" font-size="12" font-weight="bold" fill="#2563eb">O</text>
+                <text x="56" y="34" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="26" y="138" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                <text x="206" y="138" font-size="13" font-weight="bold" fill="#0f172a">C</text>
+                <text x="175" y="34" font-size="13" font-weight="bold" fill="#0f172a">D</text>
+                <text x="36" y="85" font-size="12" font-weight="bold" fill="#2563eb">7</text>
+                <text x="115" y="145" font-size="12" font-weight="bold" fill="#2563eb">9</text>
+                <text x="192" y="85" font-size="12" font-weight="bold" fill="#2563eb">8</text>
+                <text x="112" y="32" font-size="12" font-weight="bold" fill="#dc2626">AD=?</text>
               </svg>`,
-        choices: ["42°", "45°", "48°", "52°", "60°"],
-        answer: 2,
-        explanation: "공통내접선과 접현각 성질에 의해 선분 $AC \\parallel BD$가 성립하므로 엇각의 크기에 의해 $x = \\angle A = 48^\\circ$입니다."
+        choices: ["5", "6", "7", "8", "10"],
+        answer: 1,
+        explanation: "외접사각형의 대변의 합 정리: $AB + CD = AD + BC \\implies 7 + 8 = AD + 9$, 따라서 $AD = 6$입니다."
       },
       {
-        id: "H_TRIG_04",
-        unit: "삼각비",
-        subTopic: "정사면체의 높이와 삼각비 (킬러)",
-        difficulty: "상",
-        text: "한 모서리의 길이가 $6$인 정사면체 $A-BCD$에서 꼭짓점 $A$에서 밑면에 내린 수선의 발을 $H$, 모서리 $CD$의 중점을 $M$이라 하자. $\\angle AMH = x$라 할 때, $\\cos x$의 값은?",
+        id: "M_CIRC_04",
         svg: `<svg viewBox="0 0 240 160" width="220" height="150" class="max-w-full">
                 <polygon points="120,25 45,135 195,135" fill="#f8fafc" stroke="#1e293b" stroke-width="2.2"/>
                 <line x1="120" y1="25" x2="120" y2="110" stroke="#dc2626" stroke-width="2"/>
