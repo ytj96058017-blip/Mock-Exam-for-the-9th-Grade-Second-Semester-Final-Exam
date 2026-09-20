@@ -260,16 +260,17 @@
             <div class="text-3xl sm:text-4xl font-black text-slate-900 font-mono">
               <span id="resTotalScore">0</span><span class="text-lg font-normal text-slate-500"> / 100</span>
             </div>
+            <span id="resScoreSummary" class="text-[11px] text-blue-600 font-semibold mt-1 block">정답 0 / 오답 0</span>
           </div>
           <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-center">
             <div class="text-xs text-slate-500 font-semibold mb-1">삼각비 영역</div>
             <div class="text-2xl sm:text-3xl font-bold text-blue-600 font-mono" id="resTrigScore">0점</div>
-            <span class="text-[11px] text-slate-400">12문항 (48점 만점)</span>
+            <span class="text-[11px] text-slate-400" id="resTrigMeta">48점 만점</span>
           </div>
           <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-center">
             <div class="text-xs text-slate-500 font-semibold mb-1">원의 성질 영역</div>
             <div class="text-2xl sm:text-3xl font-bold text-indigo-600 font-mono" id="resCircleScore">0점</div>
-            <span class="text-[11px] text-slate-400">13문항 (52점 만점)</span>
+            <span class="text-[11px] text-slate-400" id="resCircleMeta">52점 만점</span>
           </div>
           <div class="bg-slate-50 rounded-xl p-4 border border-slate-200 text-center">
             <div class="text-xs text-slate-500 font-semibold mb-1">총 소요 시간</div>
@@ -702,16 +703,38 @@
         subTopic: "정사각형 회전과 넓이",
         difficulty: "상",
         text: "한 변의 길이가 $8\\sqrt{3}\\text{ cm}$인 정사각형 $ABCD$를 점 $A$를 중심으로 $30^\\circ$만큼 회전시켜 정사각형 $AB'C'D'$를 만들었다. 두 정사각형이 겹치는 부분의 넓이는? (교과서 175쪽 발전 6번)",
-        svg: `<svg viewBox="0 0 240 170" width="220" height="150" class="max-w-full">
-                <rect x="50" y="60" width="80" height="80" fill="none" stroke="#94a3b8" stroke-dasharray="3,3" stroke-width="1.8"/>
-                <polygon points="50,140 120,100 160,170 90,210" fill="#eff6ff" stroke="#2563eb" stroke-width="2"/>
-                <text x="35" y="150" font-size="13" font-weight="bold" fill="#0f172a">A</text>
-                <text x="135" y="65" font-size="12" font-weight="bold" fill="#0f172a">C</text>
-                <text x="50" y="52" font-size="12" font-weight="bold" fill="#0f172a">D</text>
+        // 교과서 원본 그림과 100% 동일한 정밀 기하 좌표 작도 (A 중심, 한 변 100px, 30도 반시계 회전)
+        svg: `<svg viewBox="0 0 280 230" width="260" height="210" class="max-w-full">
+                <!-- 겹치는 사각형 AB'ED (음영 강조) -->
+                <polygon points="90,180 176.6,130 147.7,80 90,80" fill="#e0e7ff" stroke="#4338ca" stroke-width="2" stroke-linejoin="round"/>
+                
+                <!-- 원래 정사각형 ABCD (회색 점선) -->
+                <rect x="90" y="80" width="100" height="100" fill="none" stroke="#94a3b8" stroke-dasharray="4,4" stroke-width="1.8"/>
+                
+                <!-- 회전된 정사각형 AB'C'D' (진한 실선) -->
+                <polygon points="90,180 176.6,130 126.6,43.4 40,93.4" fill="none" stroke="#0f172a" stroke-width="2.2" stroke-linejoin="round"/>
+                
+                <!-- 30도 각도 호 & 라벨 -->
+                <path d="M 125,180 A 35 35 0 0 0 120.3,162.5" fill="none" stroke="#ef4444" stroke-width="1.8"/>
+                <text x="126" y="174" font-size="11" font-weight="bold" fill="#ef4444">30°</text>
+                
+                <!-- 한 변의 길이 8√3 표시 -->
+                <text x="140" y="196" font-size="11" font-weight="bold" text-anchor="middle" fill="#2563eb">8√3 cm</text>
+                
+                <!-- 꼭짓점 라벨들 -->
+                <text x="75" y="190" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                <text x="195" y="188" font-size="13" font-weight="bold" fill="#64748b">B</text>
+                <text x="195" y="78" font-size="13" font-weight="bold" fill="#64748b">C</text>
+                <text x="76" y="78" font-size="13" font-weight="bold" fill="#0f172a">D</text>
+                
+                <text x="184" y="132" font-size="13" font-weight="bold" fill="#0f172a">B'</text>
+                <text x="126" y="36" font-size="13" font-weight="bold" fill="#0f172a">C'</text>
+                <text x="24" y="98" font-size="13" font-weight="bold" fill="#0f172a">D'</text>
+                <text x="148" y="74" font-size="13" font-weight="bold" fill="#4338ca">E</text>
               </svg>`,
         choices: ["64\\sqrt{3}\\text{ cm}^2", "96\\text{ cm}^2", "128\\sqrt{3}\\text{ cm}^2", "48\\sqrt{3}\\text{ cm}^2", "72\\text{ cm}^2"],
         answer: 0,
-        explanation: "겹치는 사각형은 선분 $AE$에 의해 합동인 두 직각삼각형으로 나뉩니다.<br>각의 크기를 추론하면 $\\angle DAE = 15^\\circ$가 아닌 $30^\\circ$ 회전에 의해 $\\angle BAE = 15^\\circ$ 등이 유도되어 계산하면 넓이는 $64\\sqrt{3}\\text{ cm}^2$입니다."
+        explanation: "<strong>[교과서 단계별 풀이]</strong><br>선분 $AE$를 그으면 직각삼각형 $\\triangle ADE$와 $\\triangle AB'E$에서 $AD = AB' = 8\\sqrt{3}$, 빗변 $AE$ 공통, $\\angle D = \\angle B' = 90^\\circ$이므로 $\\triangle ADE \\equiv \\triangle AB'E$ (RHS 합동)입니다.<br>회전각이 $30^\\circ$이므로 $\\angle B'AB = 30^\\circ$이고, $\\angle DAE = \\angle B'AE = \\frac{90^\\circ - 30^\\circ}{2} = 30^\\circ$가 됩니다.<br>따라서 $\\triangle ADE$에서 $DE = AD \\times \\tan 30^\\circ = 8\\sqrt{3} \\times \\frac{\\sqrt{3}}{3} = 8\\text{ cm}$입니다.<br>겹치는 사각형 $AB'ED$의 넓이는 두 삼각형의 합이므로:<br>$$S = 2 \\times \\left(\\frac{1}{2} \\times 8\\sqrt{3} \\times 8\\right) = 64\\sqrt{3}\\text{ cm}^2$$입니다."
       }
     ];
 
@@ -856,7 +879,8 @@
       easyTrig2: function() {
         const variants = [
           { expr: "\\sin 30^\\circ + \\cos 60^\\circ \\times \\tan 45^\\circ", ans: "1", step: "\\frac{1}{2} + (\\frac{1}{2} \\times 1) = 1", wrongs: ["\\frac{1}{2}", "\\frac{3}{2}", "2", "\\frac{\\sqrt{3}}{2}"] },
-          { expr: "\\frac{\\sin 60^\\circ}{\\cos 30^\\circ} + \\tan 45^\\circ", ans: "2", step: "1 + 1 = 2", wrongs: ["1", "\\frac{3}{2}", "\\sqrt{3}", "3"] }
+          { expr: "\\frac{\\sin 60^\\circ}{\\cos 30^\\circ} + \\tan 45^\\circ", ans: "2", step: "1 + 1 = 2", wrongs: ["1", "\\frac{3}{2}", "\\sqrt{3}", "3"] },
+          { expr: "\\cos 30^\\circ \\times \\tan 60^\\circ - \\sin 30^\\circ", ans: "1", step: "\\frac{\\sqrt{3}}{2} \\times \\sqrt{3} - \\frac{1}{2} = \\frac{3}{2} - \\frac{1}{2} = 1", wrongs: ["\\frac{1}{2}", "2", "\\sqrt{3}", "\\frac{3}{2}"] }
         ];
         const v = pickRandom(variants);
         const shuffled = shuffleChoices([v.ans, ...v.wrongs], 0);
@@ -875,17 +899,44 @@
         };
       },
 
+      easyCirc1: function() {
+        const angleAOB = randInt(35, 75) * 2; // 70 to 150 even
+        const angleAPB = angleAOB / 2;
+        const shuffled = shuffleChoices([`${angleAPB}^\\circ`, `${angleAPB + 10}^\\circ`, `${angleAPB - 10}^\\circ`, `${angleAOB}^\\circ`, `${angleAPB + 5}^\\circ`], 0);
+        return {
+          unit: "원의 성질",
+          subTopic: "원주각과 중심각",
+          difficulty: "하",
+          text: `원 $O$에서 호 $AB$에 대한 중심각 $\\angle AOB = ${angleAOB}^\\circ$일 때, 원주각 $\\angle APB$의 크기는?`,
+          svg: `<svg viewBox="0 0 240 180" width="220" height="160" class="max-w-full">
+                  <circle cx="120" cy="95" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                  <line x1="120" y1="95" x2="70" y2="135" stroke="#2563eb" stroke-width="2"/>
+                  <line x1="120" y1="95" x2="170" y2="135" stroke="#2563eb" stroke-width="2"/>
+                  <line x1="120" y1="30" x2="70" y2="135" stroke="#1e293b" stroke-width="2"/>
+                  <line x1="120" y1="30" x2="170" y2="135" stroke="#1e293b" stroke-width="2"/>
+                  <circle cx="120" cy="95" r="3.5" fill="#2563eb"/>
+                  <text x="120" y="115" font-size="11" font-weight="bold" text-anchor="middle" fill="#2563eb">${angleAOB}°</text>
+                  <text x="120" y="22" font-size="13" font-weight="bold" text-anchor="middle" fill="#0f172a">P</text>
+                  <text x="54" y="145" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                  <text x="178" y="145" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                </svg>`,
+          choices: shuffled.choices,
+          answer: shuffled.answerIndex,
+          explanation: `원주각의 크기는 중심각의 $\\frac{1}{2}$이므로 $\\frac{1}{2} \\times ${angleAOB}^\\circ = ${angleAPB}^\\circ$입니다.`
+        };
+      },
+
       medTrig1: function() {
         const b = randInt(4, 8) * 2;
         const c = randInt(5, 9);
         const coef = (b * c) / 4;
         const ansStr = `${coef}\\sqrt{3}`;
-        const shuffled = shuffleChoices([ansStr, `${coef * 2}\\sqrt{3}`, `${coef}`, `${coef * 2}`, `${coef * 3}\\sqrt{3}`], 0);
+        const shuffled = shuffleChoices([ansStr, `${coef * 2}\\sqrt{3}`, `${coef}`, `${coef * 2}`, `${coef + 2}\\sqrt{3}`], 0);
         return {
           unit: "삼각비",
           subTopic: "삼각비의 활용 (넓이)",
           difficulty: "중",
-          text: `$\\triangle ABC$에서 $AB = ${b}$, $AC = ${c}$, $\\angle A = 60^\\circ$일 때, 삼각형 $ABC$의 넓이는?`,
+          text: `$\\triangle ABC$에서 $AB = ${b}\\text{ cm}$, $AC = ${c}\\text{ cm}$, $\\angle A = 60^\\circ$일 때, 삼각형 $ABC$의 넓이는?`,
           svg: `<svg viewBox="0 0 250 150" width="230" height="140" class="max-w-full">
                   <polygon points="100,110 40,50 220,110" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
                   <text x="95" y="128" font-size="13" font-weight="bold" fill="#0f172a">A(60°)</text>
@@ -896,21 +947,21 @@
                 </svg>`,
           choices: shuffled.choices,
           answer: shuffled.answerIndex,
-          explanation: `$$S = \\frac{1}{2} \\times ${b} \\times ${c} \\times \\sin 60^\\circ = ${ansStr}$$입니다.`
+          explanation: `$$S = \\frac{1}{2} \\times ${b} \\times ${c} \\times \\sin 60^\\circ = \\frac{1}{2} \\times ${b} \\times ${c} \\times \\frac{\\sqrt{3}}{2} = ${ansStr}\\text{ cm}^2$$입니다.`
         };
       },
 
       medCirc1: function() {
-        const ab = randInt(5, 9);
-        const cd = randInt(6, 10);
-        const bc = randInt(5, 8);
+        const ab = randInt(6, 11);
+        const cd = randInt(7, 12);
+        const bc = randInt(5, 9);
         const ad = (ab + cd) - bc;
-        const shuffled = shuffleChoices([`${ad}`, `${ad + 1}`, `${ad - 1}`, `${ad + 2}`, `${ad - 2}`], 0);
+        const shuffled = shuffleChoices([`${ad}\\text{ cm}`, `${ad + 1}\\text{ cm}`, `${ad - 1}\\text{ cm}`, `${ad + 2}\\text{ cm}`, `${ad - 2}\\text{ cm}`], 0);
         return {
           unit: "원의 성질",
           subTopic: "원의 외접사각형",
           difficulty: "중",
-          text: `사각형 $ABCD$의 네 변이 모두 원 $O$에 외접한다. $AB = ${ab}$, $BC = ${bc}$, $CD = ${cd}$일 때, 변 $AD$의 길이는?`,
+          text: `사각형 $ABCD$의 네 변이 모두 원 $O$에 외접한다. $AB = ${ab}\\text{ cm}$, $BC = ${bc}\\text{ cm}$, $CD = ${cd}\\text{ cm}$일 때, 변 $AD$의 길이는?`,
           svg: `<svg viewBox="0 0 250 180" width="230" height="160" class="max-w-full">
                   <circle cx="125" cy="95" r="45" fill="#f8fafc" stroke="#2563eb" stroke-width="2.5"/>
                   <polygon points="65,50 45,140 195,140 175,50" fill="none" stroke="#1e293b" stroke-width="2.5"/>
@@ -924,45 +975,130 @@
                 </svg>`,
           choices: shuffled.choices,
           answer: shuffled.answerIndex,
-          explanation: `$$AB + CD = AD + BC \\implies ${ab} + ${cd} = AD + ${bc}$$이므로 $AD = ${ad}$입니다.`
+          explanation: `$$AB + CD = AD + BC \\implies ${ab} + ${cd} = AD + ${bc}$$이므로 $AD = ${ad}\\text{ cm}$입니다.`
+        };
+      },
+
+      medChord1: function() {
+        const r = pickRandom([5, 10, 13]);
+        const d = r === 5 ? 3 : (r === 10 ? 6 : 5);
+        const halfChord = Math.round(Math.sqrt(r * r - d * d));
+        const fullChord = halfChord * 2;
+        const shuffled = shuffleChoices([`${fullChord}\\text{ cm}`, `${halfChord}\\text{ cm}`, `${fullChord + 2}\\text{ cm}`, `${fullChord - 2}\\text{ cm}`, `${fullChord + 4}\\text{ cm}`], 0);
+        return {
+          unit: "원의 성질",
+          subTopic: "원의 중심과 현",
+          difficulty: "중",
+          text: `반지름의 길이가 $${r}\\text{ cm}$인 원 $O$에서 중심에서 현 $AB$에 내린 수선의 길이가 $${d}\\text{ cm}$일 때, 현 $AB$의 길이는?`,
+          svg: `<svg viewBox="0 0 240 180" width="220" height="160" class="max-w-full">
+                  <circle cx="120" cy="90" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                  <line x1="68" y1="129" x2="172" y2="129" stroke="#1e293b" stroke-width="2.5"/>
+                  <line x1="120" y1="90" x2="120" y2="129" stroke="#ef4444" stroke-width="2"/>
+                  <line x1="120" y1="90" x2="68" y2="129" stroke="#2563eb" stroke-width="2" stroke-dasharray="4,3"/>
+                  <circle cx="120" cy="90" r="3.5" fill="#2563eb"/>
+                  <text x="124" y="86" font-size="13" font-weight="bold" fill="#2563eb">O</text>
+                  <text x="56" y="136" font-size="13" font-weight="bold" fill="#0f172a">A</text>
+                  <text x="178" y="136" font-size="13" font-weight="bold" fill="#0f172a">B</text>
+                  <text x="82" y="104" font-size="12" font-weight="bold" fill="#2563eb">${r}</text>
+                  <text x="128" y="112" font-size="12" font-weight="bold" fill="#ef4444">${d}</text>
+                </svg>`,
+          choices: shuffled.choices,
+          answer: shuffled.answerIndex,
+          explanation: `피타고라스 정리에 의해 절반 현의 길이는 $\\sqrt{${r}^2 - ${d}^2} = ${halfChord}\\text{ cm}$입니다.<br>중심에서 내린 수선은 현을 이등분하므로 $AB = 2 \\times ${halfChord} = ${fullChord}\\text{ cm}$입니다.`
+        };
+      },
+
+      medInscribedQuad: function() {
+        const a = randInt(65, 85);
+        const b = randInt(70, 95);
+        const c = 180 - a;
+        const d = 180 - b;
+        const shuffled = shuffleChoices([`${c}^\\circ`, `${c + 10}^\\circ`, `${c - 10}^\\circ`, `${d}^\\circ`, `${180 - c}^\\circ`], 0);
+        return {
+          unit: "원의 성질",
+          subTopic: "원에 내접하는 사각형",
+          difficulty: "중",
+          text: `원 $O$에 내접하는 사각형 $ABCD$에서 $\\angle A = ${a}^\\circ$, $\\angle B = ${b}^\\circ$일 때, 대각 $\\angle C$의 크기는?`,
+          svg: `<svg viewBox="0 0 240 180" width="220" height="160" class="max-w-full">
+                  <circle cx="120" cy="90" r="65" fill="#f8fafc" stroke="#1e293b" stroke-width="2.5"/>
+                  <polygon points="90,30 60,120 160,150 180,70" fill="none" stroke="#2563eb" stroke-width="2.2"/>
+                  <text x="86" y="24" font-size="12" font-weight="bold" fill="#0f172a">A(${a}°)</text>
+                  <text x="44" y="125" font-size="12" font-weight="bold" fill="#0f172a">B(${b}°)</text>
+                  <text x="165" y="165" font-size="12" font-weight="bold" fill="#0f172a">C</text>
+                  <text x="188" y="70" font-size="12" font-weight="bold" fill="#0f172a">D</text>
+                </svg>`,
+          choices: shuffled.choices,
+          answer: shuffled.answerIndex,
+          explanation: `원에 내접하는 사각형의 마주 보는 대각의 합은 $180^\\circ$입니다.<br>$$\\angle C = 180^\\circ - \\angle A = 180^\\circ - ${a}^\\circ = ${c}^\\circ$$`
         };
       }
     };
 
     /* ==========================================================================
-       5. 25문항 시험지 자동 생성기 (generateExamPaper)
+       5. 25문항 시험지 자동 생성기 (generateExamPaper) - 반드시 25문항 100점 보장
        ========================================================================== */
     function generateExamPaper() {
       try {
-        // [하] 8문항
+        // [하] 8문항 확보
         const textbookEasies = TEXTBOOK_QUESTION_POOL.filter(q => q.difficulty === "하");
-        const easyGenerated = [GENERATORS.easyTrig1(), GENERATORS.easyTrig2()];
-        const combinedEasies = shuffleArray([...textbookEasies, ...easyGenerated]).slice(0, 8);
+        const easyPool = [...textbookEasies];
+        while (easyPool.length < 15) {
+          easyPool.push(GENERATORS.easyTrig1());
+          easyPool.push(GENERATORS.easyTrig2());
+          easyPool.push(GENERATORS.easyCirc1());
+        }
+        const selectedEasies = shuffleArray(easyPool).slice(0, 8);
 
-        // [중] 12문항
+        // [중] 12문항 확보
         const textbookMeds = TEXTBOOK_QUESTION_POOL.filter(q => q.difficulty === "중");
-        const medGenerated = [GENERATORS.medTrig1(), GENERATORS.medCirc1(), GENERATORS.medTrig1(), GENERATORS.medCirc1()];
-        const combinedMeds = shuffleArray([...textbookMeds, ...medGenerated]).slice(0, 12);
+        const medPool = [...textbookMeds];
+        while (medPool.length < 20) {
+          medPool.push(GENERATORS.medTrig1());
+          medPool.push(GENERATORS.medCirc1());
+          medPool.push(GENERATORS.medChord1());
+          medPool.push(GENERATORS.medInscribedQuad());
+        }
+        const selectedMeds = shuffleArray(medPool).slice(0, 12);
 
-        // [상/킬러] 5문항
+        // [상/킬러] 5문항 확보
         const textbookHards = TEXTBOOK_QUESTION_POOL.filter(q => q.difficulty === "상");
-        const combinedHards = shuffleArray([...textbookHards, ...KILLER_QUESTION_POOL]).slice(0, 5);
+        const hardPool = [...textbookHards, ...KILLER_QUESTION_POOL];
+        const selectedHards = shuffleArray(hardPool).slice(0, 5);
 
-        const examPaper = [...combinedEasies, ...combinedMeds, ...combinedHards];
+        // 8 + 12 + 5 = 정확히 25문항 조립
+        let combined = [...selectedEasies, ...selectedMeds, ...selectedHards];
 
-        // 정확히 25문항 번호 지정
-        return examPaper.slice(0, 25).map((q, idx) => ({
-          ...q,
-          qNum: idx + 1
-        }));
+        // 혹시라도 25문항이 안 되면 채워 넣는 안전 루프
+        while (combined.length < 25) {
+          combined.push(GENERATORS.medTrig1());
+        }
+
+        // 각 문항의 보기를 무작위 셔플하고 문항 번호(1~25) 부여
+        return combined.slice(0, 25).map((q, idx) => {
+          const shuffled = shuffleChoices(q.choices, q.answer);
+          return {
+            ...q,
+            qNum: idx + 1,
+            choices: shuffled.choices,
+            answer: shuffled.answerIndex
+          };
+        });
+
       } catch (err) {
         console.error("Exam paper generation fallback:", err);
-        // 비상 모드에서도 안전하게 25문항 제공
         const fallbackList = [...TEXTBOOK_QUESTION_POOL, ...KILLER_QUESTION_POOL];
-        return fallbackList.slice(0, 25).map((q, idx) => ({
-          ...q,
-          qNum: idx + 1
-        }));
+        while (fallbackList.length < 25) {
+          fallbackList.push(GENERATORS.easyTrig1());
+        }
+        return fallbackList.slice(0, 25).map((q, idx) => {
+          const shuffled = shuffleChoices(q.choices, q.answer);
+          return {
+            ...q,
+            qNum: idx + 1,
+            choices: shuffled.choices,
+            answer: shuffled.answerIndex
+          };
+        });
       }
     }
 
@@ -1136,8 +1272,13 @@
       }
 
       document.getElementById('qText').innerHTML = q.text;
+      
+      // 이미지 URL 또는 SVG 벡터 그래픽 하이브리드 지원
       const svgContainer = document.getElementById('qSvgContainer');
-      if (q.svg) {
+      if (q.imgUrl) {
+        svgContainer.innerHTML = `<img src="${q.imgUrl}" alt="문제 다이어그램" class="max-h-64 object-contain rounded-lg shadow-xs" onerror="this.parentElement.classList.add('hidden')">`;
+        svgContainer.classList.remove('hidden');
+      } else if (q.svg) {
         svgContainer.innerHTML = q.svg;
         svgContainer.classList.remove('hidden');
       } else {
@@ -1300,10 +1441,16 @@
       document.getElementById('screenResult').classList.remove('hidden');
 
       const data = state.scoreData;
+      const totalQ = state.examQuestions.length || 25;
+      const wrongCount = data.wrongQuestions.length;
+      const correctCount = totalQ - wrongCount;
+
       document.getElementById('resultStudentMeta').textContent = 
         `수험생: ${state.studentName} · 응시일시: ${new Date().toLocaleDateString('ko-KR')}`;
 
       document.getElementById('resTotalScore').textContent = data.totalScore;
+      document.getElementById('resScoreSummary').textContent = `정답 ${correctCount}개 / 오답 ${wrongCount}개`;
+
       document.getElementById('resTrigScore').textContent = `${data.trigScore}점`;
       document.getElementById('resCircleScore').textContent = `${data.circleScore}점`;
 
@@ -1357,7 +1504,7 @@
           </div>
 
           <div class="text-sm font-medium text-slate-800 mb-4 leading-relaxed">${q.text}</div>
-          ${q.svg ? `<div class="flex justify-center my-3 bg-white p-2 rounded-lg border border-slate-100">${q.svg}</div>` : ''}
+          ${q.imgUrl ? `<div class="flex justify-center my-3 bg-white p-2 rounded-lg border border-slate-100"><img src="${q.imgUrl}" class="max-h-56 object-contain"></div>` : (q.svg ? `<div class="flex justify-center my-3 bg-white p-2 rounded-lg border border-slate-100">${q.svg}</div>` : '')}
 
           <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs mb-4">
             <div class="p-2.5 rounded-lg ${isCorrect ? 'bg-slate-50' : 'bg-rose-100/50 text-rose-900 font-bold'}">
