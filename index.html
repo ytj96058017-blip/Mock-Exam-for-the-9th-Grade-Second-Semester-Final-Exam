@@ -1837,10 +1837,43 @@
 
     async function fetchAndRenderPortfolio(pin) {
       const feedbackEl = document.getElementById('portfolioAiFeedback');
-      feedbackEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2 text-blue-600"></i>구글 시트 압축 데이터베이스에서 누적 응시 기록을 초고속 조회 중입니다...';
+      const cacheStorageKey = 'cached_portfolio_' + pin;
 
-      let portfolioData = null;
+      // 1. [로컬 우선 초고속 렌더링 - 0.01초 즉시 실행]
+      // 방금 응시한 시험 결과 또는 이전에 저장된 로컬 캐시가 있으면 서버를 기다리지 않고 바로 차트 표시!
+      let instantData = null;
 
+      if (state.scoreData && state.scoreData.itemLogs) {
+        const localStats = {};
+        state.scoreData.itemLogs.forEach(item => {
+          const key = item.subTopic || item.unit;
+          if (!localStats[key]) localStats[key] = { total: 0, correct: 0 };
+          localStats[key].total += 1;
+          if (item.isCorrect) localStats[key].correct += 1;
+        });
+
+        instantData = {
+          rounds: [
+            { round: state.currentExamRound || 1, totalScore: state.scoreData.totalScore, date: new Date().toLocaleDateString('ko-KR') }
+          ],
+          topicStats: localStats
+        };
+      } else {
+        try {
+          const localSaved = localStorage.getItem(cacheStorageKey);
+          if (localSaved) instantData = JSON.parse(localSaved);
+        } catch (e) {}
+      }
+
+      // 로컬 데이터가 있으면 스피너 대기 없이 즉시 차트 렌더링
+      if (instantData) {
+        renderPortfolioCharts(instantData);
+        generateAiFeedback(instantData);
+      } else {
+        feedbackEl.innerHTML = '<i class="fa-solid fa-spinner fa-spin mr-2 text-blue-600"></i>누적 응시 기록을 안전하게 불러오는 중입니다...';
+      }
+
+      // 2. [백그라운드 동기화] 백그라운드에서 구글 시트의 전체 누적 회차를 비동기 병합
       try {
         const res = await fetch(GOOGLE_SCRIPT_URL, {
           method: 'POST',
@@ -1850,43 +1883,21 @@
             pin: pin
           })
         });
-        portfolioData = await res.json();
-      } catch (err) {
-        console.warn("Portfolio fetch fallback:", err);
-      }
+        const serverData = await res.json();
 
-      // 구글 시트 연결 전이거나 첫 응시인 경우 현재 세션 데이터 기반으로 즉시 시각화 생성
-      if (!portfolioData || !portfolioData.success || !portfolioData.rounds || portfolioData.rounds.length === 0) {
-        const currScore = state.scoreData ? state.scoreData.totalScore : 84;
-        
-        // 현재 세션의 풀이 기록을 소단원별 통계로 변환
-        const localStats = {};
-        if (state.scoreData && state.scoreData.itemLogs) {
-          state.scoreData.itemLogs.forEach(item => {
-            const key = item.subTopic || item.unit;
-            if (!localStats[key]) localStats[key] = { total: 0, correct: 0 };
-            localStats[key].total += 1;
-            if (item.isCorrect) localStats[key].correct += 1;
-          });
+        if (serverData && serverData.success && serverData.rounds && serverData.rounds.length > 0) {
+          // 로컬 스토리지에 최신 데이터 캐시
+          try {
+            localStorage.setItem(cacheStorageKey, JSON.stringify(serverData));
+          } catch (e) {}
+
+          // 서버의 전체 회차 기록으로 차트 부드럽게 업데이트
+          renderPortfolioCharts(serverData);
+          generateAiFeedback(serverData);
         }
-
-        portfolioData = {
-          rounds: [
-            { round: 1, totalScore: currScore, date: new Date().toLocaleDateString('ko-KR') }
-          ],
-          topicStats: Object.keys(localStats).length > 0 ? localStats : {
-            "삼각비의 뜻": { total: 4, correct: 4 },
-            "특수각의 삼각비": { total: 4, correct: 3 },
-            "삼각비의 활용": { total: 6, correct: 4 },
-            "원의 중심과 현": { total: 3, correct: 3 },
-            "원주각과 중심각": { total: 5, correct: 4 },
-            "원의 접선과 반지름": { total: 3, correct: 2 }
-          }
-        };
+      } catch (err) {
+        console.warn("Background portfolio sync complete or offline fallback active:", err);
       }
-
-      renderPortfolioCharts(portfolioData);
-      generateAiFeedback(portfolioData);
     }
 
     function renderPortfolioCharts(data) {
