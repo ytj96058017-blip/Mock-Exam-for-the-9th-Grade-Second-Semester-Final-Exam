@@ -1431,6 +1431,533 @@
       }
     }
 
+    /* ==========================================================================
+       4. 필수 시험 진행 및 핸들러 함수 복구 (모바일/PC 완벽 호환)
+       ========================================================================== */
+
+    // [1] 학생 인증 및 시험 시작 핸들러 (타임아웃 4초 안전장치 탑재)
+    async function handleStartVerification() {
+      const pinInput = document.getElementById('inputPin');
+      const nameInput = document.getElementById('inputName');
+      const btn = document.getElementById('btnStartExam');
+      const btnText = document.getElementById('btnStartExamText');
+      const statusMsg = document.getElementById('introStatusMsg');
+
+      const pin = pinInput.value.trim();
+      const name = nameInput.value.trim();
+
+      if (!pin || pin.length < 3) {
+        showStatusMessage('학생 핀번호(학번 또는 숫자 4~6자리)를 입력해주세요.', 'error');
+        pinInput.focus();
+        return;
+      }
+      if (!name || name.length < 1) {
+        showStatusMessage('학생 성명을 입력해주세요.', 'error');
+        nameInput.focus();
+        return;
+      }
+
+      state.studentPin = pin;
+      state.studentName = name;
+
+      // 로딩 UI 상태 변경
+      btn.disabled = true;
+      btnText.textContent = '서버 확인 중...';
+      showStatusMessage('서버 데이터베이스와 통신 중입니다...', 'info');
+
+      const controller = new AbortController();
+      const timeoutId = setTimeout(() => controller.abort(), 4000); // 모바일 지연 대비 4초 타임아웃
+
+      try {
+        const response = await fetch(GOOGLE_SCRIPT_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+          body: JSON.stringify({
+            action: 'VERIFY_STUDENT',
+            pin: pin,
+            name: name
+          }),
+          signal: controller.signal
+        });
+        clearTimeout(timeoutId);
+
+        const data = await response.json();
+        if (data.success) {
+          state.verifiedStatus = data.status;
+          state.currentExamRound = (data.examCount || 0) + 1;
+          showStatusMessage(data.message, 'success');
+          setTimeout(() => {
+            beginExam(generateExamPaper());
+          }, 400);
+        } else {
+          showStatusMessage(data.message, 'error');
+          btn.disabled = false;
+          btnText.textContent = '학생 확인 및 시험 시작';
+        }
+      } catch (err) {
+        clearTimeout(timeoutId);
+        console.warn("Server verification bypassed or timed out:", err);
+        // 네트워크 오류 또는 타임아웃 시 모바일 학생이 멈추지 않도록 즉시 시험 입장 허용
+        showStatusMessage('네트워크 연결 지연으로 오프라인 로컬 모드로 시험을 시작합니다.', 'info');
+        state.verifiedStatus = 'LOCAL_OFFLINE';
+        setTimeout(() => {
+          beginExam(generateExamPaper());
+        }, 500);
+      }
+    }
+
+    function showStatusMessage(msg, type) {
+      const el = document.getElementById('introStatusMsg');
+      el.classList.remove('hidden', 'bg-red-50', 'text-red-700', 'border-red-200', 'bg-blue-50', 'text-blue-700', 'border-blue-200', 'bg-green-50', 'text-green-700', 'border-green-200');
+      if (type === 'error') {
+        el.classList.add('bg-red-50', 'text-red-700', 'border-red-200');
+      } else if (type === 'success') {
+        el.classList.add('bg-green-50', 'text-green-700', 'border-green-200');
+      } else {
+        el.classList.add('bg-blue-50', 'text-blue-700', 'border-blue-200');
+      }
+      el.textContent = msg;
+    }
+
+    // [2] 시작 화면에서 포트폴리오 바로 보기
+    function handleCheckPortfolioFromIntro() {
+      const pin = document.getElementById('inputPin').value.trim();
+      const name = document.getElementById('inputName').value.trim();
+      if (!pin) {
+        showStatusMessage('포트폴리오 조회를 위해 핀번호를 먼저 입력해주세요.', 'error');
+        document.getElementById('inputPin').focus();
+        return;
+      }
+      state.studentPin = pin;
+      state.studentName = name || '학생';
+      document.getElementById('screenIntro').classList.add('hidden');
+      document.getElementById('screenPortfolio').classList.remove('hidden');
+      fetchAndRenderPortfolio(pin);
+    }
+
+    // [3] 시험장 화면 진입 및 타이머 시작
+    function beginExam(questions) {
+      state.examQuestions = questions;
+      state.examSubmitted = false;
+      state.examStartTime = Date.now();
+
+      document.getElementById('screenIntro').classList.add('hidden');
+      document.getElementById('screenResult').classList.add('hidden');
+      document.getElementById('screenPortfolio').classList.add('hidden');
+      document.getElementById('screenExam').classList.remove('hidden');
+
+      // 상단 헤더 업데이트
+      const headerInfo = document.getElementById('headerExamInfo');
+      headerInfo.classList.remove('hidden');
+      document.getElementById('headerStudentName').textContent = `${state.studentName} (${state.studentPin})`;
+
+      buildOmrMinimap();
+      loadQuestion(state.currentQuestionIndex || 0);
+
+      // 타이머 시작
+      clearInterval(state.timerInterval);
+      updateTimerDisplay();
+      state.timerInterval = setInterval(() => {
+        state.timeRemaining--;
+        updateTimerDisplay();
+        saveProgressToLocal();
+
+        if (state.timeRemaining <= 0) {
+          clearInterval(state.timerInterval);
+          showModal('alert', '시험 시간 종료', '제한 시간 40분이 초과되어 답안이 자동 제출됩니다.', () => {
+            submitExam(true);
+          }, false);
+        }
+      }, 1000);
+    }
+
+    function updateTimerDisplay() {
+      const timerEl = document.getElementById('timerDisplay');
+      const min = Math.floor(Math.max(0, state.timeRemaining) / 60);
+      const sec = Math.max(0, state.timeRemaining) % 60;
+      timerEl.textContent = `${String(min).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+      if (state.timeRemaining < 300) {
+        timerEl.classList.add('urgent-timer');
+      } else {
+        timerEl.classList.remove('urgent-timer');
+      }
+    }
+
+    // [4] OMR 미니맵 버튼 동적 생성
+    function buildOmrMinimap() {
+      const omrGrid = document.getElementById('omrGrid');
+      omrGrid.innerHTML = '';
+
+      let answeredCount = 0;
+      state.examQuestions.forEach((q, idx) => {
+        const isAnswered = state.userAnswers[idx] !== undefined;
+        if (isAnswered) answeredCount++;
+
+        const isCurrent = (idx === state.currentQuestionIndex);
+        const omrBtn = document.createElement('button');
+        omrBtn.type = 'button';
+        omrBtn.textContent = idx + 1;
+
+        let baseClass = "h-8 rounded-lg font-mono text-xs font-bold transition flex items-center justify-center border ";
+        if (isCurrent) {
+          baseClass += "border-slate-900 ring-2 ring-slate-900 ";
+        } else {
+          baseClass += "border-slate-200 ";
+        }
+
+        if (isAnswered) {
+          baseClass += "bg-blue-600 text-white";
+        } else {
+          baseClass += "bg-slate-50 text-slate-600 hover:bg-slate-100";
+        }
+
+        omrBtn.className = baseClass;
+        omrBtn.onclick = () => loadQuestion(idx);
+        omrGrid.appendChild(omrBtn);
+      });
+
+      document.getElementById('answeredCountBadge').textContent = `${answeredCount} / 25 완료`;
+    }
+
+    // [5] 5지선다 선택지 터치/클릭
+    function selectChoice(qIndex, choiceIndex) {
+      state.userAnswers[qIndex] = choiceIndex;
+      saveProgressToLocal();
+      loadQuestion(qIndex); // 선택 스타일 및 OMR 갱신
+    }
+
+    // [6] 이전/다음 문항 이동
+    function navigateQuestion(direction) {
+      const nextIndex = state.currentQuestionIndex + direction;
+      if (nextIndex >= 0 && nextIndex < state.examQuestions.length) {
+        loadQuestion(nextIndex);
+      }
+    }
+
+    // [7] 최종 답안 제출 확인 모달
+    function confirmSubmitExam() {
+      const total = state.examQuestions.length;
+      const answered = Object.keys(state.userAnswers).length;
+      const unanswered = total - answered;
+
+      let msg = "답안을 제출하고 채점을 진행하시겠습니까?";
+      if (unanswered > 0) {
+        msg = `아직 풀지 않은 문제가 ${unanswered}개 있습니다. 이대로 제출하시겠습니까?`;
+      }
+
+      showModal('confirm', '시험 최종 제출', msg, () => {
+        submitExam(false);
+      }, true);
+    }
+
+    // [8] 결과 리포트 렌더링
+    function renderResultScreen() {
+      document.getElementById('screenExam').classList.add('hidden');
+      document.getElementById('screenResult').classList.remove('hidden');
+
+      const s = state.scoreData;
+      document.getElementById('resultStudentMeta').textContent = 
+        `${state.studentName} (${state.studentPin}) 수험생 · 응시 회차: ${state.currentExamRound}회`;
+
+      document.getElementById('resTotalScore').textContent = s.totalScore;
+      document.getElementById('resScoreSummary').textContent = 
+        `정답 ${Math.round(s.totalScore / 4)}개 / 오답 ${25 - Math.round(s.totalScore / 4)}개`;
+      document.getElementById('resTrigScore').textContent = `${s.trigScore}점`;
+      document.getElementById('resCircleScore').textContent = `${s.circleScore}점`;
+
+      const m = Math.floor(s.timeSpentSec / 60);
+      const sec = s.timeSpentSec % 60;
+      document.getElementById('resTimeSpent').textContent = 
+        `${String(m).padStart(2, '0')}:${String(sec).padStart(2, '0')}`;
+
+      renderReviewQuestions();
+    }
+
+    // [9] 문항별 상세 해설 렌더링
+    function renderReviewQuestions() {
+      const container = document.getElementById('reviewQuestionsContainer');
+      container.innerHTML = '';
+
+      state.examQuestions.forEach((q, idx) => {
+        const userChoice = state.userAnswers[idx];
+        const isCorrect = (userChoice === q.answer);
+
+        if (state.reviewFilter === 'WRONG' && isCorrect) {
+          return; // 오답 필터링 시 정답 문항 숨김
+        }
+
+        const choiceIcons = ['①', '②', '③', '④', '⑤'];
+        const card = document.createElement('div');
+        card.className = `p-4 sm:p-5 rounded-2xl border ${
+          isCorrect ? 'bg-slate-50 border-slate-200' : 'bg-red-50/40 border-red-200'
+        } space-y-3`;
+
+        let statusBadge = isCorrect
+          ? `<span class="px-2 py-0.5 rounded-md bg-emerald-100 text-emerald-800 text-xs font-bold"><i class="fa-solid fa-check mr-1"></i>정답</span>`
+          : `<span class="px-2 py-0.5 rounded-md bg-rose-100 text-rose-800 text-xs font-bold"><i class="fa-solid fa-xmark mr-1"></i>오답</span>`;
+
+        let figHtml = '';
+        if (q.svg) {
+          figHtml = `<div class="py-2 flex justify-center">${q.svg}</div>`;
+        }
+
+        let userChoiceText = userChoice !== undefined ? `${choiceIcons[userChoice]} $${q.choices[userChoice]}$` : '<span class="text-rose-600 font-bold">미응답</span>';
+        let correctChoiceText = `${choiceIcons[q.answer]} $${q.choices[q.answer]}$`;
+
+        card.innerHTML = `
+          <div class="flex items-center justify-between border-b border-slate-200/80 pb-2">
+            <div class="flex items-center space-x-2">
+              <span class="font-bold text-sm text-slate-800">[Q${q.qNum}]</span>
+              <span class="text-xs text-slate-500 font-medium">${q.unit} · ${q.subTopic}</span>
+            </div>
+            ${statusBadge}
+          </div>
+          <div class="text-sm font-medium text-slate-800">${q.text}</div>
+          ${figHtml}
+          <div class="grid grid-cols-1 sm:grid-cols-2 gap-2 text-xs bg-white p-2.5 rounded-xl border border-slate-200">
+            <div><span class="text-slate-500">내가 고른 답:</span> <strong>${userChoiceText}</strong></div>
+            <div><span class="text-slate-500">실제 정답:</span> <strong class="text-blue-600">${correctChoiceText}</strong></div>
+          </div>
+          <div class="text-xs bg-blue-50/70 p-3 rounded-xl border border-blue-200 text-slate-700 leading-relaxed">
+            <div class="font-bold text-blue-900 mb-1 flex items-center space-x-1">
+              <i class="fa-solid fa-lightbulb text-amber-500"></i>
+              <span>단계별 핵심 해설</span>
+            </div>
+            <div>${q.explanation || '해설이 제공되지 않는 문항입니다.'}</div>
+          </div>
+        `;
+        container.appendChild(card);
+      });
+
+      renderKatex();
+    }
+
+    function setReviewFilter(filter) {
+      state.reviewFilter = filter;
+      document.getElementById('filterTabAll').className = filter === 'ALL'
+        ? "px-3 py-1.5 rounded-lg bg-white shadow-xs text-slate-900 transition"
+        : "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+      document.getElementById('filterTabWrong').className = filter === 'WRONG'
+        ? "px-3 py-1.5 rounded-lg bg-white shadow-xs text-slate-900 transition"
+        : "px-3 py-1.5 rounded-lg text-slate-600 hover:text-slate-900 transition";
+      renderReviewQuestions();
+    }
+
+    // [10] 결과 화면에서 포트폴리오 및 오답 클리닉
+    function handleViewPortfolio() {
+      document.getElementById('screenResult').classList.add('hidden');
+      document.getElementById('screenPortfolio').classList.remove('hidden');
+      fetchAndRenderPortfolio(state.studentPin);
+    }
+
+    function handleRestartClinic() {
+      if (!state.scoreData || !state.scoreData.wrongQuestions) return;
+      const wrongList = state.examQuestions.filter((q, idx) => state.userAnswers[idx] !== q.answer);
+      if (wrongList.length === 0) {
+        showModal('info', '오답 클리닉 안내', '틀린 문제가 없습니다! 100점 만점을 축하합니다.', null, false);
+        return;
+      }
+      state.userAnswers = {};
+      state.timeRemaining = wrongList.length * 120; // 문항당 2분 배정
+      state.currentQuestionIndex = 0;
+      beginExam(wrongList);
+    }
+
+    function handleBackFromPortfolio() {
+      document.getElementById('screenPortfolio').classList.add('hidden');
+      if (state.scoreData) {
+        document.getElementById('screenResult').classList.remove('hidden');
+      } else {
+        document.getElementById('screenIntro').classList.remove('hidden');
+        document.getElementById('btnStartExam').disabled = false;
+        document.getElementById('btnStartExamText').textContent = '학생 확인 및 시험 시작';
+      }
+    }
+
+    // [11] Chart.js 포트폴리오 렌더러
+    function renderPortfolioCharts(data) {
+      document.getElementById('portfolioStudentName').textContent = state.studentName || '학생';
+      document.getElementById('portfolioPinBadge').textContent = `PIN: ${state.studentPin || '-'}`;
+
+      // 1) 회차별 선 그래프
+      const roundsCanvas = document.getElementById('chartScoreRounds');
+      if (roundsCanvas && data.rounds) {
+        const labels = data.rounds.map(r => `${r.round}회차`);
+        const scores = data.rounds.map(r => r.totalScore);
+
+        if (roundsChartInstance) roundsChartInstance.destroy();
+        roundsChartInstance = new Chart(roundsCanvas.getContext('2d'), {
+          type: 'line',
+          data: {
+            labels: labels,
+            datasets: [{
+              label: '총점 (100점 만점)',
+              data: scores,
+              borderColor: '#2563eb',
+              backgroundColor: 'rgba(37, 99, 235, 0.1)',
+              borderWidth: 2.5,
+              tension: 0.3,
+              fill: true,
+              pointRadius: 5,
+              pointBackgroundColor: '#1d4ed8'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              y: { min: 0, max: 100, ticks: { stepSize: 20 } }
+            }
+          }
+        });
+      }
+
+      // 2) 5대 영역 레이더 차트
+      const radarCanvas = document.getElementById('chartTopicRadar');
+      if (radarCanvas) {
+        const categories = ["삼각비 정의·특수각", "삼각비 활용·넓이", "원의 중심과 현", "원주각과 내접사각형", "접선과 접현각"];
+        const percentages = calculate5DomainPercentages(data.topicStats);
+
+        if (radarChartInstance) radarChartInstance.destroy();
+        radarChartInstance = new Chart(radarCanvas.getContext('2d'), {
+          type: 'radar',
+          data: {
+            labels: categories,
+            datasets: [{
+              label: '단원별 정답률 (%)',
+              data: percentages,
+              borderColor: '#4f46e5',
+              backgroundColor: 'rgba(79, 70, 229, 0.2)',
+              borderWidth: 2,
+              pointBackgroundColor: '#4338ca'
+            }]
+          },
+          options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+              r: { min: 0, max: 100, ticks: { stepSize: 25, display: false } }
+            }
+          }
+        });
+      }
+
+      // 3) 소단원 통계 바
+      const barsContainer = document.getElementById('portfolioTopicBars');
+      if (barsContainer && data.topicStats) {
+        barsContainer.innerHTML = '';
+        Object.keys(data.topicStats).forEach(tName => {
+          const st = data.topicStats[tName];
+          const pct = Math.round((st.correct / st.total) * 100) || 0;
+          const barDiv = document.createElement('div');
+          barDiv.className = "bg-white p-3 rounded-xl border border-slate-200 text-xs";
+          barDiv.innerHTML = `
+            <div class="flex justify-between items-center mb-1">
+              <span class="font-bold text-slate-800 truncate">${tName}</span>
+              <span class="font-mono text-slate-500">${st.correct}/${st.total} (${pct}%)</span>
+            </div>
+            <div class="w-full bg-slate-100 rounded-full h-2 overflow-hidden">
+              <div class="bg-blue-600 h-2 rounded-full transition-all" style="width: ${pct}%"></div>
+            </div>
+          `;
+          barsContainer.appendChild(barDiv);
+        });
+      }
+    }
+
+    function calculate5DomainPercentages(stats) {
+      if (!stats) return [80, 75, 85, 70, 60];
+      const buckets = [
+        { total: 0, correct: 0 },
+        { total: 0, correct: 0 },
+        { total: 0, correct: 0 },
+        { total: 0, correct: 0 },
+        { total: 0, correct: 0 }
+      ];
+
+      Object.keys(stats).forEach(topic => {
+        const item = stats[topic];
+        let idx = 0;
+        if (topic.includes('활용') || topic.includes('넓이') || topic.includes('거리') || topic.includes('높이')) idx = 1;
+        else if (topic.includes('현') || topic.includes('중심거리') || topic.includes('동심원')) idx = 2;
+        else if (topic.includes('원주각') || topic.includes('내접')) idx = 3;
+        else if (topic.includes('접선') || topic.includes('접현각')) idx = 4;
+        else idx = 0;
+
+        buckets[idx].total += item.total;
+        buckets[idx].correct += item.correct;
+      });
+
+      return buckets.map(b => b.total > 0 ? Math.round((b.correct / b.total) * 100) : 75);
+    }
+
+    function generateAiFeedback(data) {
+      const fbEl = document.getElementById('portfolioAiFeedback');
+      if (!fbEl) return;
+      const avgScore = data.rounds && data.rounds.length > 0
+        ? Math.round(data.rounds.reduce((acc, r) => acc + r.totalScore, 0) / data.rounds.length)
+        : 80;
+
+      let advice = "";
+      if (avgScore >= 90) {
+        advice = `${state.studentName} 학생은 중3-2 기하 전 단원에서 최상위권의 탁월한 개념 완성도를 보여주고 있습니다. 고난도 보조선 작도 킬러 문제에서도 강점을 발휘하고 있으므로 실전 시험에서 100점 만점을 충분히 기대할 수 있습니다.`;
+      } else if (avgScore >= 75) {
+        advice = `${state.studentName} 학생은 삼각비 기초와 원의 기본 성질을 안정적으로 이해하고 있습니다. 다만, '보조선을 긋는 복합 기하'와 '접현각을 이용한 각도 추론' 문제에서 실수 패턴이 나타나므로 오답 클리닉을 통한 집중 복습을 권장합니다.`;
+      } else {
+        advice = `${state.studentName} 학생은 특수각 삼각비와 원주각의 기본 공식을 다시 한번 체계적으로 점검할 필요가 있습니다. '틀린 문제 다시 풀기' 기능을 활용해 단계별 해설을 꼼꼼히 정리하면 빠른 성적 향상이 가능합니다.`;
+      }
+      fbEl.textContent = advice;
+    }
+
+    // [12] 커스텀 모달 다이얼로그 (alert/confirm 대체)
+    function showModal(type, title, desc, onConfirm, showCancel = false) {
+      const modal = document.getElementById('customModal');
+      const iconContainer = document.getElementById('modalIconContainer');
+      const titleEl = document.getElementById('modalTitle');
+      const descEl = document.getElementById('modalDesc');
+      const btnGroup = document.getElementById('modalButtons');
+
+      titleEl.textContent = title;
+      descEl.textContent = desc;
+
+      if (type === 'alert' || type === 'error') {
+        iconContainer.className = "w-10 h-10 sm:w-12 sm:h-12 rounded-full mx-auto flex items-center justify-center text-base sm:text-lg mb-3 bg-red-100 text-red-600";
+        iconContainer.innerHTML = '<i class="fa-solid fa-triangle-exclamation"></i>';
+      } else if (type === 'confirm') {
+        iconContainer.className = "w-10 h-10 sm:w-12 sm:h-12 rounded-full mx-auto flex items-center justify-center text-base sm:text-lg mb-3 bg-blue-100 text-blue-600";
+        iconContainer.innerHTML = '<i class="fa-solid fa-circle-question"></i>';
+      } else {
+        iconContainer.className = "w-10 h-10 sm:w-12 sm:h-12 rounded-full mx-auto flex items-center justify-center text-base sm:text-lg mb-3 bg-slate-100 text-slate-600";
+        iconContainer.innerHTML = '<i class="fa-solid fa-circle-info"></i>';
+      }
+
+      btnGroup.innerHTML = '';
+      if (showCancel) {
+        const cancelBtn = document.createElement('button');
+        cancelBtn.type = 'button';
+        cancelBtn.className = "px-4 py-2 bg-slate-100 text-slate-700 text-xs font-bold rounded-xl active:bg-slate-200 transition";
+        cancelBtn.textContent = '취소';
+        cancelBtn.onclick = closeModal;
+        btnGroup.appendChild(cancelBtn);
+      }
+
+      const confirmBtn = document.createElement('button');
+      confirmBtn.type = 'button';
+      confirmBtn.className = "px-5 py-2 bg-slate-900 text-white text-xs font-bold rounded-xl active:bg-slate-800 transition";
+      confirmBtn.textContent = '확인';
+      confirmBtn.onclick = () => {
+        closeModal();
+        if (onConfirm) onConfirm();
+      };
+      btnGroup.appendChild(confirmBtn);
+
+      modal.classList.remove('hidden');
+    }
+
+    function closeModal() {
+      document.getElementById('customModal').classList.add('hidden');
+    }
+
     // Initialize as soon as DOM is ready for fast mobile rendering
     document.addEventListener('DOMContentLoaded', function() {
       checkRecoverableSession();
